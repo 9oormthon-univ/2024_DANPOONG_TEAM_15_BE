@@ -19,8 +19,8 @@
 
 1. **코드 복제**
    ```bash
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+   git clone https://github.com/9oormthon-univ/2024_DANPOONG_TEAM_15_BE.git
+   cd 2024_DANPOONG_TEAM_15_BE
     ```
 2. 환경 변수 설정
    프로젝트 루트 디렉토리에 .env 파일을 생성하고 아래 내용을 추가하세요:
@@ -33,8 +33,12 @@
     
     JWT_SECRET_KEY=
     ```
-### 🐳 Docker로 실행하기 (Using Docker)
-1. Docker-Compose로 실행하기
+---
+### 🐳 Docker로 개발 환경 실행하기 (Using Docker)
    ```bash
    docker-compose -f docker-compose.dev.yml up --build -d
    ```
+---
+### 🔍 Swagger로 API 문서 확인하기
+   - [http://localhost:8080/swagger-ui/index.html#](http://localhost:8080/swagger-ui/index.html#)
+---
