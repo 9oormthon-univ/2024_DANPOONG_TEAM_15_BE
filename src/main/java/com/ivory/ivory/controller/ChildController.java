@@ -31,7 +31,7 @@ public class ChildController {
     @GetMapping()
     public ResponseEntity<?> getChildren() {
         Long cuurentUserId = securityUtil.getCurrentMemberId();
-        CustomApiResponse<?> result = childService.getChildred(cuurentUserId);
+        CustomApiResponse<?> result = childService.getChildren(cuurentUserId);
         return ResponseEntity.ok(result);
     }
 
