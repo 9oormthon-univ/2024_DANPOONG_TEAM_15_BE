@@ -63,10 +63,15 @@ public class ChildService {
         children.forEach(child -> {
             LocalDate childBirthDate = child.getBirth();
             LocalDate nowDate = LocalDate.now();
-            Long age = (long) Period.between(childBirthDate, nowDate).getYears();
+            Long age = calculateAge(childBirthDate, nowDate);
             childrenList.add(ChildListDto.from(child, age));
         });
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "자녀 목록 조회에 성공했습니다.", childrenList);
+    }
+
+    //자녀 나이 계산 함수
+    public Long calculateAge (LocalDate childBirthDate, LocalDate nowDate) {
+        return (long) Period.between(childBirthDate, nowDate).getYears();
     }
 }
 
