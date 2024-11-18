@@ -10,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.service.SecurityService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/children")
@@ -27,6 +24,14 @@ public class ChildController {
     public ResponseEntity<?> addChild(@Valid @RequestBody ChildRequestDto dto) {
         Long currentUserId = securityUtil.getCurrentMemberId();
         CustomApiResponse<?> result = childService.addChild(dto,currentUserId);
+        return ResponseEntity.ok(result);
+    }
+
+    //자녀 목록 조회
+    @GetMapping()
+    public ResponseEntity<?> getChildren() {
+        Long cuurentUserId = securityUtil.getCurrentMemberId();
+        CustomApiResponse<?> result = childService.getChildred(cuurentUserId);
         return ResponseEntity.ok(result);
     }
 

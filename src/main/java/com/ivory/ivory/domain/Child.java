@@ -5,6 +5,8 @@ import com.ivory.ivory.util.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name="child")
 @Getter
@@ -21,7 +23,7 @@ public class Child extends BaseEntity {
     private String name;
 
     @Column(name="child_birth", nullable = false)
-    private String birth;
+    private LocalDate birth;
 
     @Column(name="educational_institution", nullable = false)
     private String educationalInstitution;

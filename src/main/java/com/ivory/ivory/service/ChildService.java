@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,26 @@ public class ChildService {
         CustomApiResponse response = CustomApiResponse.createSuccess(HttpStatus.OK.value(),"자녀 정보가 성공적으로 등록되었습니다.",null);
 
         return response;
+    }
+
+    public CustomApiResponse<?> getChildred(Long memberId) {
+        Optional<Member> member = memberRepository.findById(memberId);
+        if(member.isEmpty()) {
+            CustomApiResponse<?> response = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 유저입니다.");
+            return response;
+        }
+
+        List<Child> children = childRepository.findAllByMember_Id(memberId);
+        if(children.isEmpty()){
+            CustomApiResponse<?> response = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "등록한 자녀가 존재하지 않습니다.");
+                return response;
+        }
+
+//        children.forEach(child ->{
+//
+//
+//        });
+        return null;
     }
 }
 
