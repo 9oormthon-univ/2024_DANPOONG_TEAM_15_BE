@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ivory
-    username: root
-    password: 1234
+    url: ${DB_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,4 +21,4 @@ logging:
       ivory.ivory: debug
 
 jwt:
-  secret: e045565f57afbf7c740a9f6d056de1e03639d42e059033c18b6042468f633fd8d2eec668806467d7417bdae7ba8263bcd65f6a0f7a37acd96a86b85fe5b85140
+  secret: ${JWT_SECRET}
