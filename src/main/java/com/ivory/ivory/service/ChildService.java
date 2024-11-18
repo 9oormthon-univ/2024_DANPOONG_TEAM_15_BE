@@ -12,6 +12,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.file.NotDirectoryException;
@@ -29,6 +30,7 @@ public class ChildService {
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
 
+    @Transactional
     public CustomApiResponse<?> addChild(ChildRequestDto dto, Long memberId) {
         //요청한 유저가 존재하는 유저인지 확인
         Optional<Member> member = memberRepository.findById(memberId);

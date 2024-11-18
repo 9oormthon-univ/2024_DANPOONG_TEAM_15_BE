@@ -30,8 +30,8 @@ public class ChildController {
     //자녀 목록 조회
     @GetMapping()
     public ResponseEntity<?> getChildren() {
-        Long cuurentUserId = securityUtil.getCurrentMemberId();
-        CustomApiResponse<?> result = childService.getChildren(cuurentUserId);
+        Long currentUserId = securityUtil.getCurrentMemberId();
+        CustomApiResponse<?> result = childService.getChildren(currentUserId);
         return ResponseEntity.ok(result);
     }
 

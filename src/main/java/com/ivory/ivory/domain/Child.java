@@ -33,6 +33,9 @@ public class Child extends BaseEntity {
     private Member member;
 
     public static Child toEntity(ChildRequestDto dto, Member member) {
+        if (dto == null || member == null) {
+            throw new IllegalArgumentException("dto와 member는 null일 수 없습니다.");
+        }
         return Child.builder()
                 .name(dto.getChildName())
                 .birth(dto.getBirthDate())
