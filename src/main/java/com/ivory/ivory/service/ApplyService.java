@@ -70,7 +70,7 @@ public class ApplyService {
         subsidy = getSubsidy(incomeType,age,totalAmount);
 
         //서비스 상태 계산
-        Status status = getStatus(startDate,endDate);
+        Status status = getNowStatus(startDate,endDate);
 
         //엔티티 생성
         Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,member.get(),child.get());
@@ -117,7 +117,7 @@ public class ApplyService {
     }
 
     //서비스 상태 계산
-    public Status getStatus(LocalDateTime startDate, LocalDateTime endDate) {
+    public Status getNowStatus(LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(startDate)) {
             return Status.YET;
@@ -153,26 +153,44 @@ public class ApplyService {
         List<ApplyListDto> applyListDto = new ArrayList<>();
         applyList.forEach(apply -> {
 
-            //신청날짜 데이터 포맷
-            String applyDate = apply.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+            //서비스 이용 날짜 (0000년 00월 00일)
+            String applyDate = getApplyDate(apply.getStartDate());
 
-            //서비스 이용 시간 데이터 포맷
-            String startTime = apply.getStartDate().format(DateTimeFormatter.ofPattern("HH:mm"));
-            String endTime = apply.getEndDate().format(DateTimeFormatter.ofPattern("HH:mm"));
-            String careTime = startTime + " ~ " + endTime;
+            //서비스 이용 시간 (00:00 ~ 00:00)
+            String careTime = getCareTime(apply.getStartDate(),apply.getEndDate());
 
-            //서비스 상태
-            Status serviceStatus = getStatus(apply.getStartDate(),apply.getEndDate());
-            String status = "";
-            switch (serviceStatus) {
-                case YET: status =  "서비스 신청 완료"; break;
-                case IN_PROGRESS: status = "돌봄 서비스 이용 중"; break;
-                case COMPLETE: status = "이용 완료"; break;
-            }
+            //호출 시점의 서비스 상태 조회
+            Status serviceStatus = getNowStatus(apply.getStartDate(),apply.getEndDate());
+            String status = getStatus(serviceStatus);
 
             applyListDto.add(ApplyListDto.from(applyDate,careTime,status));
         });
-
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"신청 목록 조회에 성공했습니다.",applyListDto);
+    }
+
+    //신청날짜 데이터 포맷 메소드
+    public String getApplyDate(LocalDateTime createdAt) {
+        return createdAt.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+    }
+
+    //서비스 이용 시간 데이터 포맷
+    public String getCareTime(LocalDateTime startDate, LocalDateTime endDate) {
+        String startTime = startDate.format(DateTimeFormatter.ofPattern("HH:mm"));
+        String endTime = endDate.format(DateTimeFormatter.ofPattern("HH:mm"));
+        return startTime + " ~ " + endTime;
+    }
+
+    //서비스 상태
+    public String getStatus(Status Status) {
+        switch (Status) {
+            case YET: return "서비스 신청 완료";
+            case IN_PROGRESS: return "돌봄 서비스 이용 중";
+            case COMPLETE: return "이용 완료";
+            default: return "";
+        }
+    }
+
+    public CustomApiResponse<?> getApplyDetail(Long childId, Long currentMemberId) {
+        return null;
     }
 }

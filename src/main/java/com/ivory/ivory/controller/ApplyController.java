@@ -31,4 +31,12 @@ public class ApplyController {
         CustomApiResponse<?> response = applyService.getApplyList(childId,currentMemberId);
         return ResponseEntity.ok(response);
     }
+
+    //신청 세부 조회
+    @GetMapping("/{childId}")
+    public ResponseEntity<?> getApplyDetail(@PathVariable Long childId) {
+        Long currentMemberId = securityUtil.getCurrentMemberId();
+        CustomApiResponse<?> response = applyService.getApplyDetail(childId,currentMemberId);
+        return ResponseEntity.ok(response);
+    }
 }
