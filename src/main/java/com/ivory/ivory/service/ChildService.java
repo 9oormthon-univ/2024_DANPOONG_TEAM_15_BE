@@ -1,18 +1,22 @@
 package com.ivory.ivory.service;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.ivory.ivory.domain.Child;
 import com.ivory.ivory.domain.Member;
 import com.ivory.ivory.dto.ChildListDto;
 import com.ivory.ivory.dto.ChildRequestDto;
 import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.repository.MemberRepository;
+import com.ivory.ivory.s3.S3UploadService;
 import com.ivory.ivory.util.response.CustomApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.file.NotDirectoryException;
@@ -29,20 +33,33 @@ public class ChildService {
 
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
+    private final S3UploadService s3UploadService;
 
     @Transactional
     public CustomApiResponse<?> addChild(ChildRequestDto dto, Long memberId) {
-        //요청한 유저가 존재하는 유저인지 확인
-        Optional<Member> member = memberRepository.findById(memberId);
-        if(member.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다.");
+        try{
+            //요청한 유저가 존재하는 유저인지 확인
+            Optional<Member> member = memberRepository.findById(memberId);
+            if(member.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다.");
+            }
+            //이미지
+            MultipartFile imageUrl = dto.getImage();
+            String image = s3UploadService.upload(imageUrl,"childImage");
+
+            //엔티티 생성
+            Child child = Child.toEntity(dto,image,member.get());
+            //DB에 저장
+            childRepository.save(child);
+            //응답 생성
+            return CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"자녀 정보가 성공적으로 등록되었습니다.",null);
+        } catch(DataAccessException dae) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"데이터 베이스 오류가 발생했습니다.");
+        } catch (AmazonS3Exception s3Exception) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드 중 오류가 발생했습니다.");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"서버 오류가 발생했습니다.");
         }
-        //엔티티 생성
-        Child child = Child.toEntity(dto,member.get());
-        //DB에 저장
-        childRepository.save(child);
-        //응답 생성
-        return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"자녀 정보가 성공적으로 등록되었습니다.",null);
     }
 
     public CustomApiResponse<?> getChildren(Long memberId) {

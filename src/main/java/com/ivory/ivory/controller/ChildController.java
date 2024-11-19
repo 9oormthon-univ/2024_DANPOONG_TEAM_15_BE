@@ -20,8 +20,8 @@ public class ChildController {
     private final SecurityUtil securityUtil;
 
     //자녀 등록
-    @PostMapping()
-    public ResponseEntity<?> addChild(@Valid @RequestBody ChildRequestDto dto) {
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<?> addChild(@Valid @ModelAttribute ChildRequestDto dto) {
         Long currentUserId = securityUtil.getCurrentMemberId();
         CustomApiResponse<?> result = childService.addChild(dto,currentUserId);
         return ResponseEntity.ok(result);

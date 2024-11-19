@@ -25,21 +25,25 @@ public class Child extends BaseEntity {
     @Column(name="child_birth", nullable = false)
     private LocalDate birth;
 
-    @Column(name="educational_institution", nullable = false)
-    private String educationalInstitution;
+    @Column(name="child_gender", nullable = false)
+    private String gender;
+
+    @Column(name="image", nullable = false)
+    private String image;
 
     @ManyToOne
     @JoinColumn(name="member_id", nullable = false)
     private Member member;
 
-    public static Child toEntity(ChildRequestDto dto, Member member) {
+    public static Child toEntity(ChildRequestDto dto,String image,Member member) {
         if (dto == null || member == null) {
             throw new IllegalArgumentException("dto와 member는 null일 수 없습니다.");
         }
         return Child.builder()
                 .name(dto.getChildName())
                 .birth(dto.getBirthDate())
-                .educationalInstitution(dto.getEducationalInstitution())
+                .gender(dto.getGender())
+                .image(image)
                 .member(member)
                 .build();
     }

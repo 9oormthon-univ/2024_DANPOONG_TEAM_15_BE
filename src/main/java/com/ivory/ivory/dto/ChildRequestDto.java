@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -23,8 +24,7 @@ public class ChildRequestDto {
     @Past(message = "생년월일은 현재 날짜보다 이전이어야 합니다.")
     private LocalDate birthDate;
 
-    @NotBlank(message = "자녀의 교육기관은 필수 입력값입니다.")
-    @Size(max = 100, message = "교육기관명은 100자를 초과할 수 없습니다.")
-    @Pattern(regexp = "^[가-힣a-zA-Z0-9\\s]+$", message = "교육기관명은 한글, 영문, 숫자, 공백만 허용됩니다.")
-    private String educationalInstitution;
+    private String gender;
+
+    private MultipartFile image;
 }
