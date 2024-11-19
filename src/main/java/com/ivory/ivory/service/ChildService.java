@@ -42,7 +42,7 @@ public class ChildService {
         //DB에 저장
         childRepository.save(child);
         //응답 생성
-        return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"자녀 정보가 성공적으로 등록되었습니다.",null);
+        return CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"자녀 정보가 성공적으로 등록되었습니다.",null);
     }
 
     public CustomApiResponse<?> getChildren(Long memberId) {
