@@ -33,10 +33,10 @@ public class ApplyController {
     }
 
     //신청 세부 조회
-    @GetMapping("/{childId}")
-    public ResponseEntity<?> getApplyDetail(@PathVariable Long childId) {
+    @GetMapping("/{applyId}")
+    public ResponseEntity<?> getApplyDetail(@PathVariable Long applyId) {
         Long currentMemberId = securityUtil.getCurrentMemberId();
-        CustomApiResponse<?> response = applyService.getApplyDetail(childId,currentMemberId);
+        CustomApiResponse<?> response = applyService.getApplyDetail(applyId,currentMemberId);
         return ResponseEntity.ok(response);
     }
 }
