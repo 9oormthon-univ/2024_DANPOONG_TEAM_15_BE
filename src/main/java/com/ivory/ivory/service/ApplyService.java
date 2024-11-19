@@ -109,9 +109,14 @@ public class ApplyService {
         //응답 dto 생성
         List<ApplyListDto> applyListDto = new ArrayList<>();
         applyList.forEach(apply -> {
+            //이름
+            String name = child.get().getName();
 
-            //서비스 이용 날짜 (0000년 00월 00일)
-            String applyDate = getApplyDate(apply.getStartDate());
+            //서비스 신청 날짜 (0000년 00월 00일)
+            String applyDate = getApplyDate(apply.getCreateAt());
+
+            //서비스 이용 날짜
+            String careDate = apply.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             //서비스 이용 시간 (00:00 ~ 00:00)
             String careTime = getCareTime(apply.getStartDate(),apply.getEndDate());
@@ -120,7 +125,7 @@ public class ApplyService {
             Status serviceStatus = getNowStatus(apply.getStartDate(),apply.getEndDate());
             String status = getStatus(serviceStatus);
 
-            applyListDto.add(ApplyListDto.from(applyDate,careTime,status));
+            applyListDto.add(ApplyListDto.from(name,applyDate,careDate,careTime,status));
         });
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"신청 목록 조회에 성공했습니다.",applyListDto);
     }
@@ -163,7 +168,7 @@ public class ApplyService {
         LocalDateTime endDate = apply.get().getEndDate();
 
         //서비스 이용날짜
-        String careDate = getApplyDate(startDate);
+        String careDate = apply.get().getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         //서비스 이용시간
         String careTime = getCareTime(startDate,endDate);
