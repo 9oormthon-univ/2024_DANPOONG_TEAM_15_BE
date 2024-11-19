@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ChildRepository extends JpaRepository<Child, Long> {
     List<Child> findAllByMember_Id(Long memberId);
-    Optional<Child> findById(Long childId);
+    Optional<Child> findById(Long id);
 }
