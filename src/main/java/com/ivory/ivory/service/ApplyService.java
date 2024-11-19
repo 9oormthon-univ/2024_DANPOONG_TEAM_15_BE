@@ -39,8 +39,13 @@ public class ApplyService {
         }
 
         Optional<Child> child = childRepository.findById(dto.getChildId());
+
         if(child.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 자녀의 기본키 입니다.");
+        }
+
+        if(!child.get().getMember().getId().equals(currentMemberId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"본인의 자녀만 신청 가능합니다.");
         }
 
         //시간
@@ -72,7 +77,7 @@ public class ApplyService {
         //DB에 저장
         serviceRepository.save(apply);
         //응답 생성
-        CustomApiResponse<?> response = CustomApiResponse.createSuccess(HttpStatus.OK.value(),"서비스가 성공적으로 신청되었습니다.",null);
+        CustomApiResponse<?> response = CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"서비스가 성공적으로 신청되었습니다.",null);
 
         return response;
     }
