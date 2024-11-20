@@ -42,7 +42,7 @@ public class ChildService {
         //DB에 저장
         childRepository.save(child);
         //응답 생성
-        return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"자녀 정보가 성공적으로 등록되었습니다.",null);
+        return CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"자녀 정보가 성공적으로 등록되었습니다.",null);
     }
 
     public CustomApiResponse<?> getChildren(Long memberId) {
@@ -63,10 +63,15 @@ public class ChildService {
         children.forEach(child -> {
             LocalDate childBirthDate = child.getBirth();
             LocalDate nowDate = LocalDate.now();
-            Long age = (long) Period.between(childBirthDate, nowDate).getYears();
+            Long age = calculateAge(childBirthDate, nowDate);
             childrenList.add(ChildListDto.from(child, age));
         });
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "자녀 목록 조회에 성공했습니다.", childrenList);
+    }
+
+    //자녀 나이 계산 함수
+    public Long calculateAge (LocalDate childBirthDate, LocalDate nowDate) {
+        return (long) Period.between(childBirthDate, nowDate).getYears();
     }
 }
 
