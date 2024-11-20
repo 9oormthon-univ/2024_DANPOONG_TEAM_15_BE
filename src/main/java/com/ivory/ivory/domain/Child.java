@@ -28,7 +28,7 @@ public class Child extends BaseEntity {
     @Column(name="child_gender", nullable = false)
     private String gender;
 
-    @Column(name="image", nullable = false)
+    @Column(name="image", nullable = false, length = 2048)
     private String image;
 
     @ManyToOne
