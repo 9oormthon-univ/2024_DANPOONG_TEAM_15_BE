@@ -17,3 +17,9 @@ cloud:
       auto: false
     stack:
       auto: false
+
+ocr:
+    api:
+        secret-key: ${OCR_API_SECRET}
+        url: ${OCR_API_URL}
+        template-ids: ${OCR_TEMPLATE_IDS}

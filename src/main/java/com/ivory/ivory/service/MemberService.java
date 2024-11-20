@@ -6,6 +6,7 @@ import com.ivory.ivory.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class MemberService {
     private final MemberRepository memberRepository;
 
+    @Transactional
     public MemberInfoDto getMemberInfo(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "해당하는 회원이 존재하지 않습니다."));
