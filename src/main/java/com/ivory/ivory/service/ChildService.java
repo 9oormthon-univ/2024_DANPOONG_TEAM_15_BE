@@ -46,7 +46,6 @@ public class ChildService {
             //이미지
             MultipartFile imageUrl = dto.getImage();
             String image = s3UploadService.upload(imageUrl,"childImage");
-
             //엔티티 생성
             Child child = Child.toEntity(dto,image,member.get());
             //DB에 저장

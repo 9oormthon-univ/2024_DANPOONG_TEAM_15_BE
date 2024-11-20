@@ -60,7 +60,7 @@ public class ProdSecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).denyAll()
-                        .requestMatchers("/auth/**","apply/payments/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**","apply/payments/**").permitAll()
                         .anyRequest().authenticated()
                 );
         jwtSecurityConfig.configure(http);
