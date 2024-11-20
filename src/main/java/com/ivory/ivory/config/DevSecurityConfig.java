@@ -60,7 +60,7 @@ public class DevSecurityConfig {
                         ).permitAll()
 
                         // 인증 없이 허용할 추가 경로
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
 
                         // 나머지 요청은 인증 필요
                         .anyRequest().authenticated()
