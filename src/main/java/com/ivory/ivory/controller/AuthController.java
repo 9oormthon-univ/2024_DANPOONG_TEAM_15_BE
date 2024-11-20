@@ -27,11 +27,6 @@ public class AuthController {
         return CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"회원가입을 성공하였습니다.",null);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto) {
-//        return ResponseEntity.ok(authService.login(memberRequestDto));
-//    }
-
     @PostMapping("/login")
     public CustomApiResponse<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto) {
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"로그인에 성공하였습니다.",authService.login(memberRequestDto));
@@ -39,7 +34,7 @@ public class AuthController {
 
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    public CustomApiResponse<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"토큰 재발급에 성공하였습니다.",authService.reissue(tokenRequestDto));
     }
 }
