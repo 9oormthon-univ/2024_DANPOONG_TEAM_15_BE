@@ -13,12 +13,14 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+        // 인증정보 허용
+        config.setAllowCredentials(false); // 일단 이렇게..
+        //config.addAllowedOrigin("http://localhost:3000"); // React 애플리케이션 URL
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
 
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config); // 모든 엔드포인트에 대해 CORS 허용
         return new CorsFilter(source);
     }
 }
