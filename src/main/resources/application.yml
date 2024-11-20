@@ -23,3 +23,6 @@ ocr:
         secret-key: ${OCR_API_SECRET}
         url: ${OCR_API_URL}
         template-ids: ${OCR_TEMPLATE_IDS}
+kakaopay:
+    secretKey: ${KAKAOPAY_SECRET_KEY}
+    cid: ${CID}
