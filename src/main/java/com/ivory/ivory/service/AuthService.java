@@ -3,7 +3,6 @@ package com.ivory.ivory.service;
 import com.ivory.ivory.domain.Member;
 import com.ivory.ivory.domain.RefreshToken;
 import com.ivory.ivory.dto.MemberRequestDto;
-import com.ivory.ivory.dto.MemberResponseDto;
 import com.ivory.ivory.dto.SignUpDto;
 import com.ivory.ivory.dto.TokenDto;
 import com.ivory.ivory.dto.TokenRequestDto;
@@ -12,11 +11,13 @@ import com.ivory.ivory.repository.MemberRepository;
 import com.ivory.ivory.repository.RefreshTokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,13 +29,14 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public MemberResponseDto signup(SignUpDto signUpDto) {
+    public void signup(SignUpDto signUpDto) {
         if (memberRepository.existsByEmail(signUpDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 가입되어 있는 유저입니다.");
         }
 
         Member member = signUpDto.toMember(passwordEncoder);
-        return MemberResponseDto.from(memberRepository.save(member));
+
+        memberRepository.save(member);
     }
 
     @Transactional

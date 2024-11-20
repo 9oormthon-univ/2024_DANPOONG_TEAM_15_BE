@@ -1,12 +1,14 @@
 package com.ivory.ivory.controller;
 
 import com.ivory.ivory.dto.MemberRequestDto;
-import com.ivory.ivory.dto.MemberResponseDto;
 import com.ivory.ivory.dto.SignUpDto;
 import com.ivory.ivory.dto.TokenDto;
 import com.ivory.ivory.dto.TokenRequestDto;
 import com.ivory.ivory.service.AuthService;
+import com.ivory.ivory.util.response.CustomApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,18 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<MemberResponseDto> signup(@RequestBody SignUpDto signUpDto) {
-        return ResponseEntity.ok(authService.signup(signUpDto));
+    @PostMapping("/sign-up")
+    public CustomApiResponse<?> signup(@Valid @RequestBody SignUpDto signUpDto) {
+        authService.signup(signUpDto);
+        return CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"회원가입을 성공하였습니다.",null);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto) {
-        return ResponseEntity.ok(authService.login(memberRequestDto));
+    public CustomApiResponse<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto) {
+        return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"로그인에 성공하였습니다.",authService.login(memberRequestDto));
     }
 
+
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    public CustomApiResponse<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"토큰 재발급에 성공하였습니다.",authService.reissue(tokenRequestDto));
     }
 }

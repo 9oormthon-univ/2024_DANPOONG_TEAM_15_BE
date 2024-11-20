@@ -1,5 +1,6 @@
 package com.ivory.ivory.domain;
 
+import com.ivory.ivory.util.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,7 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", updatable = false)
@@ -30,6 +31,9 @@ public class Member {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -42,11 +46,11 @@ public class Member {
     private Authority authority;
 
     @Builder
-    public Member(String email, String password, IncomeType incomeType, Authority authority) {
+    public Member(String email, String name, String password, IncomeType incomeType, Authority authority) {
         this.email = email;
+        this.name = name;
         this.password = password;
         this.incomeType = incomeType;
         this.authority = authority;
     }
-
 }

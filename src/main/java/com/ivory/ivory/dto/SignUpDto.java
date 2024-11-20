@@ -24,6 +24,10 @@ public class SignUpDto {
     @NotNull
     private String email;
 
+    @NotNull
+    @Size(max = 50)
+    private String name;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     @Size(min = 3, max = 100)
@@ -35,6 +39,7 @@ public class SignUpDto {
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(email)
+                .name(name)
                 .password(passwordEncoder.encode(this.password))
                 .incomeType(incomeType)
                 .authority(Authority.ROLE_USER)

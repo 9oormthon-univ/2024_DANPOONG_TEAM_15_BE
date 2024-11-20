@@ -10,6 +10,8 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      ACCESS_KEY: ${ACCESS_KEY}
+      SECRET_KEY: ${SECRET_KEY}
       SPRING_PROFILES_ACTIVE: dev
     depends_on:
       db:
