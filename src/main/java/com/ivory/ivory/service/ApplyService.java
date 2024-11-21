@@ -174,10 +174,10 @@ public class ApplyService {
         String careTime = getCareTime(startDate,endDate);
 
         //기본 요금
-        Long totalAmount = calculateTotalAmount(startDate,endDate);
+        Long totalAmount = apply.get().getTotalAmount();
 
         //지원 요금
-        Long subsidy = getSubsidy(incomeType,age,totalAmount);
+        Long subsidy = apply.get().getSubsidy();
 
         //본인 부담금
         Long copay = totalAmount - subsidy;
