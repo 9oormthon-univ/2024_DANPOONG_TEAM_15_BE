@@ -1,10 +1,13 @@
 package com.ivory.ivory.service;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.ivory.ivory.domain.Apply;
 import com.ivory.ivory.domain.Child;
 import com.ivory.ivory.domain.Member;
+import com.ivory.ivory.domain.Status;
 import com.ivory.ivory.dto.ChildListDto;
 import com.ivory.ivory.dto.ChildRequestDto;
+import com.ivory.ivory.repository.ApplyRepository;
 import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.repository.MemberRepository;
 import com.ivory.ivory.s3.S3UploadService;
@@ -34,6 +37,7 @@ public class ChildService {
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
     private final S3UploadService s3UploadService;
+    private final ApplyRepository applyRepository;
 
     @Transactional
     public CustomApiResponse<?> addChild(ChildRequestDto dto, Long memberId) {
@@ -80,7 +84,15 @@ public class ChildService {
             LocalDate childBirthDate = child.getBirth();
             LocalDate nowDate = LocalDate.now();
             Long age = calculateAge(childBirthDate, nowDate);
-            childrenList.add(ChildListDto.from(child, age));
+
+            String recentApplyStatus = "신청 내역 없음";
+            //신청 상태
+            Apply apply = applyRepository.findFirstByChild_IdOrderByCreateAt(child.getId());
+            if (apply != null) {
+                 recentApplyStatus = getStatus(apply.getStatus());
+            }
+
+            childrenList.add(ChildListDto.from(child,age,recentApplyStatus));
         });
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "자녀 목록 조회에 성공했습니다.", childrenList);
     }
@@ -88,6 +100,16 @@ public class ChildService {
     //자녀 나이 계산 함수
     public Long calculateAge (LocalDate childBirthDate, LocalDate nowDate) {
         return (long) Period.between(childBirthDate, nowDate).getYears();
+    }
+
+    //서비스 상태
+    public String getStatus(Status Status) {
+        switch (Status) {
+            case YET: return "서비스 신청 완료";
+            case IN_PROGRESS: return "돌봄 서비스 이용 중";
+            case COMPLETE: return "이용 완료";
+            default: return "";
+        }
     }
 }
 
