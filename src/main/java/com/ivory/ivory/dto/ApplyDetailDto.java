@@ -23,6 +23,8 @@ public class ApplyDetailDto {
     private String subsidy;
     private String copay;
     private String status;
+    private MedicalCertificatesDto medicalCertificates;
+    private AbsenceCertificatesDto absenceCertificates;
 
     public static ApplyDetailDto from(
             String applyDate,
@@ -35,7 +37,9 @@ public class ApplyDetailDto {
             String totalAmount,
             String subsidy,
             String copay,
-            String status
+            String status,
+            MedicalCertificatesDto medicalCertificates,
+            AbsenceCertificatesDto absenceCertificates
             ) {
         return ApplyDetailDto.builder()
                 .applyDate(applyDate)
@@ -49,6 +53,8 @@ public class ApplyDetailDto {
                 .subsidy(subsidy)
                 .copay(copay)
                 .status(status)
+                .medicalCertificates(medicalCertificates)
+                .absenceCertificates(absenceCertificates)
                 .build();
     }
 }

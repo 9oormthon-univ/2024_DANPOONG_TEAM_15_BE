@@ -17,6 +17,12 @@ public class ApplyDto {
     @NotNull(message = "신청할 자식의 기본키는 필수값 입니다.")
     private Long childId;
 
+    @NotNull(message = "진단서의 기본키는 필수값 입니다.")
+    private  Long medicalCertificateId;
+
+    @NotNull(message = "미등원 확인서의 기본키는 필수값 입니다.")
+    private Long absenceCertificateId;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
 
