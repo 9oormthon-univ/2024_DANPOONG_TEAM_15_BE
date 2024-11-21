@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
     List<Apply> findAllByChild_Id(Long childId);
     Optional<Apply> findById (Long applyId);
+    Apply findFirstByChild_IdOrderByCreateAt(Long childID);
+
 }

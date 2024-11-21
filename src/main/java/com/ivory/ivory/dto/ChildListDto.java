@@ -14,15 +14,16 @@ public class ChildListDto {
     private Long age;
     private String gender;
     private String image;
-    //TODO : recentApplyStatus 추가 예정
+    private String recentApplyStatus;
 
-    public static ChildListDto from(Child child,Long age) {
+    public static ChildListDto from(Child child,Long age, String recentApplyStatus) {
         return ChildListDto.builder()
                 .childId(child.getId())
                 .childName(child.getName())
                 .age(age)
                 .gender(child.getGender())
                 .image(child.getImage())
+                .recentApplyStatus(recentApplyStatus)
                 .build();
     }
 }
