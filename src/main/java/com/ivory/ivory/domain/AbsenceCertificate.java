@@ -16,47 +16,44 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
-@Table(name="medical_certificate")
+@Table(name="absence_certificate")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class MedicalCertificate extends BaseEntity {
+public class AbsenceCertificate extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="medical_certificate_id", updatable = false)
+    @Column(name="absence_certificate_id", updatable = false)
     private Long id;
 
     @Column(name="name", nullable = true)
     private String name;
 
-    @Column(name = "address", nullable = true)
-    private String address;
+    @Column(name="absence_start_date", nullable = true)
+    private LocalDate absenceStartDate;
 
-    @Column(name = "diagnosis_date", nullable = true)
-    private LocalDate diagnosisDate;
+    @Column(name="absence_end_date", nullable = true)
+    private LocalDate absenceEndDate;
 
-    @Column(name = "diagnosis_name", nullable = true)
-    private String diagnosisName;
+    @Column(name="absence_reason", nullable = true)
+    private String absenceReason;
 
-    @Column(name = "diagnosis_content", nullable = true)
-    private String diagnosisContent;
-
-    @Column(name = "doctor_name", nullable = true)
-    private String doctorName;
+    @Column(name="note", nullable = true)
+    private String note;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="child_id", nullable = false)
     private Child child;
 
     @Builder
-    public MedicalCertificate(String name, String address, LocalDate diagnosisDate, String diagnosisName, String diagnosisContent, String doctorName, Child child) {
+
+    public AbsenceCertificate(String name, LocalDate absenceStartDate, LocalDate absenceEndDate, String absenceReason,
+                              String note, Child child) {
         this.name = name;
-        this.address = address;
-        this.diagnosisDate = diagnosisDate;
-        this.diagnosisName = diagnosisName;
-        this.diagnosisContent = diagnosisContent;
-        this.doctorName = doctorName;
+        this.absenceStartDate = absenceStartDate;
+        this.absenceEndDate = absenceEndDate;
+        this.absenceReason = absenceReason;
+        this.note = note;
         this.child = child;
     }
 }
