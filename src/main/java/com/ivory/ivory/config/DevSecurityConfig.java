@@ -60,7 +60,7 @@ public class DevSecurityConfig {
                         ).permitAll()
 
                         // 인증 없이 허용할 추가 경로
-                        .requestMatchers("/api/v1/auth/**","apply/payments/**").permitAll() //카카오페이 401에러 때문에,,,일단은,,
+                        .requestMatchers("/api/v1/auth/**","/api/v1/apply/payments/**").permitAll() //카카오페이 401에러 때문에,,,일단은,,
 
                         // 나머지 요청은 인증 필요
                         .anyRequest().authenticated()
