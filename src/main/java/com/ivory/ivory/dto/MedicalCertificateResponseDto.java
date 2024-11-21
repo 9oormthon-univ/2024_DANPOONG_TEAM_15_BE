@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 public class MedicalCertificateResponseDto {
     private Long id;
     private String name;

@@ -1,7 +1,10 @@
 package com.ivory.ivory.service;
 
+import com.ivory.ivory.domain.AbsenceCertificate;
 import com.ivory.ivory.domain.Child;
 import com.ivory.ivory.domain.MedicalCertificate;
+import com.ivory.ivory.dto.AbsenceCertificateRequestDto;
+import com.ivory.ivory.dto.AbsenceCertificateResponseDto;
 import com.ivory.ivory.dto.MedicalCertificatePageDto;
 import com.ivory.ivory.dto.MedicalCertificateRequestDto;
 import com.ivory.ivory.dto.MedicalCertificateResponseDto;
@@ -9,6 +12,7 @@ import com.ivory.ivory.dto.MedicalCertificatesDto;
 import com.ivory.ivory.dto.PageInfo;
 import com.ivory.ivory.ocr.OcrParser;
 import com.ivory.ivory.ocr.OcrService;
+import com.ivory.ivory.repository.AbsenceCertificateRepository;
 import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.repository.MedicalCertificateRepository;
 import com.ivory.ivory.util.DateUtil;
@@ -19,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,9 +38,7 @@ public class MedicalCertificateService {
     private final MedicalCertificateRepository medicalCertificateRepository;
     private final ChildRepository childRepository;
     private final OcrService ocrService;
-
-    @Qualifier("medicalCertificateParser")
-    private final OcrParser medicalCertificateParser;
+    private final OcrParser certificateOcrParser;
 
     //TODO: 진단서 검증 로직 추가
     @Transactional
@@ -50,15 +51,23 @@ public class MedicalCertificateService {
             }
 
             String jsonResponse = ocrService.processOcr(medicalCertificateRequestDto.getFile());
-            Map<String, String> parseData = medicalCertificateParser.parse(jsonResponse);
+            Map<String, String> parseData = certificateOcrParser.parse(jsonResponse);
+
+            String name = parseData.get("이름");
+            String address = parseData.get("주소");
+            String diagnosisDate = parseData.get("진단일");
+            String diagnosisName = parseData.get("진단명");
+            String diagnosisContent = parseData.get("의견");
+            String doctorName = parseData.get("의사명");
+
 
             MedicalCertificate medicalCertificate = MedicalCertificate.builder()
-                    .name(parseData.get("이름"))
-                    .address(parseData.get("주소"))
-                    .diagnosisDate(DateUtil.parseToLocalDate(parseData.get("진단일")))
-                    .diagnosisName(parseData.get("진단명"))
-                    .diagnosisContent(parseData.get("의견"))
-                    .doctorName(parseData.get("의사명"))
+                    .name(name)
+                    .address(address)
+                    .diagnosisDate(diagnosisDate != null ? DateUtil.parseToLocalDate(diagnosisDate) : null)
+                    .diagnosisName(diagnosisName)
+                    .diagnosisContent(diagnosisContent)
+                    .doctorName(doctorName)
                     .child(child)
                     .build();
 

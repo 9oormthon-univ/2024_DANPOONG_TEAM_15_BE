@@ -34,7 +34,8 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin", "ping"]
       interval: 5s
-      retries: 20
+      timeout: 10s
+      retries: 40
     networks:
       - app-network
 
