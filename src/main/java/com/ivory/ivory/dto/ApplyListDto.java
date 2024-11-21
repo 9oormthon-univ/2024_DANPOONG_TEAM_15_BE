@@ -8,7 +8,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//TODO : 진단서, 미등원 확인서 등록 서류 추가 필요
 public class ApplyListDto {
     private String name;
     private String applyDate;

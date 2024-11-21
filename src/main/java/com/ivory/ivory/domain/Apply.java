@@ -47,9 +47,13 @@ public class Apply extends BaseEntity {
     @JoinColumn(name="child_id")
     private Child child;
 
-    //TODO : 진단서 연관관계 맺기
+    @OneToOne
+    @JoinColumn(name="medical_certificate_id")
+    private MedicalCertificate medicalCertificate;
 
-    //TODO : 미등원 확인서 연관관계 맺기
+    @OneToOne
+    @JoinColumn(name="absence_certificate_id")
+    private AbsenceCertificate absenceCertificate;
 
     public static Apply toEntity(
             ApplyDto service,
@@ -58,7 +62,10 @@ public class Apply extends BaseEntity {
             IncomeType incomeType,
             Status status,
             Member member,
-            Child child) {
+            Child child,
+            MedicalCertificate medicalCertificate,
+            AbsenceCertificate absenceCertificate
+    ) {
         return Apply.builder()
                 .startDate(service.getStartDate())
                 .endDate(service.getEndDate())
@@ -68,6 +75,8 @@ public class Apply extends BaseEntity {
                 .status(status)
                 .member(member)
                 .child(child)
+                .medicalCertificate(medicalCertificate)
+                .absenceCertificate(absenceCertificate)
                 .build();
     }
 }

@@ -1,14 +1,11 @@
 package com.ivory.ivory.service;
 
 import com.ivory.ivory.domain.*;
-import com.ivory.ivory.dto.ApplyDetailDto;
-import com.ivory.ivory.dto.ApplyDto;
-import com.ivory.ivory.dto.ApplyListDto;
-import com.ivory.ivory.repository.ChildRepository;
-import com.ivory.ivory.repository.MemberRepository;
-import com.ivory.ivory.repository.ApplyRepository;
+import com.ivory.ivory.dto.*;
+import com.ivory.ivory.repository.*;
 import com.ivory.ivory.util.response.CustomApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,13 +24,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-//TODO : 진단서, 미등원 확인서 등록 서류 추가 필요
 public class ApplyService {
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
     private final ApplyRepository serviceRepository;
     private final ChildService childService;
     private final ApplyRepository applyRepository;
+    private final MedicalCertificateRepository medicalCertificateRepository;
+    private final AbsenceCertificateRepository absenceCertificateRepository;
 
     //서비스 신청
     public CustomApiResponse<?> applyService(ApplyDto dto, Long currentMemberId) {
@@ -42,7 +40,6 @@ public class ApplyService {
         if(member.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다.");
         }
-
         Optional<Child> child = childRepository.findById(dto.getChildId());
         if(child.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 자녀의 기본키 입니다.");
@@ -50,6 +47,22 @@ public class ApplyService {
         //조회한 유저의 자녀가 아닌 경우의 신청 하지 못하도록 에러 처리
         if(!child.get().getMember().getId().equals(currentMemberId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"본인의 자녀만 신청 가능합니다.");
+        }
+
+        Optional<MedicalCertificate> medicalCertificate = medicalCertificateRepository.findById(dto.getMedicalCertificateId());
+        if(medicalCertificate.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"존재하지 않는 진단서 입니다.");
+        }
+        if (!medicalCertificate.get().getChild().getId().equals(dto.getChildId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 진단서를 사용할 권한이 없습니다");
+        }
+
+        Optional<AbsenceCertificate> absenceCertificate = absenceCertificateRepository.findById(dto.getAbsenceCertificateId());
+        if(absenceCertificate.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"존재하지 않는 미등원 확인서 입니다.");
+        }
+        if(!absenceCertificate.get().getChild().getId().equals(dto.getChildId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 미등원 확인서를 사용할 권한이 없습니다.");
         }
 
         //시간
@@ -77,7 +90,7 @@ public class ApplyService {
         Status status = getNowStatus(startDate,endDate);
 
         //엔티티 생성
-        Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,member.get(),child.get());
+        Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,member.get(),child.get(),medicalCertificate.get(),absenceCertificate.get());
         //DB에 저장
         serviceRepository.save(apply);
         //응답 생성
@@ -148,6 +161,8 @@ public class ApplyService {
         }
 
         Optional<Child> child = childRepository.findById(apply.get().getChild().getId());
+        Optional<MedicalCertificate> medicalCertificate = medicalCertificateRepository.findByChild_Id(child.get().getId());
+        Optional<AbsenceCertificate> absenceCertificate = absenceCertificateRepository.findByChild_Id(child.get().getId());
 
         //신청 날짜
         String applyDate = getApplyDate(apply.get().getCreateAt());
@@ -186,6 +201,29 @@ public class ApplyService {
         Status nowStatus = getNowStatus(startDate,endDate);
         String status = getStatus(nowStatus);
 
+        //진단서 관련 정보
+        String medicalCertificateTitle = medicalCertificate.get().getDiagnosisDate().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+        LocalDate medicalCertificateCreatedAt = LocalDate.from(medicalCertificate.get().getCreateAt());
+
+        MedicalCertificatesDto medicalCertificatesDto = MedicalCertificatesDto.builder()
+                .id(medicalCertificate.get().getId())
+                .title(medicalCertificateTitle)
+                .createdAt(medicalCertificateCreatedAt)
+                .build();
+
+        //미등원 확인서 관련 정보
+        String absenceCertificateTitle = absenceCertificate.get().getAbsenceStartDate().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+        LocalDate absenceStartDate = absenceCertificate.get().getAbsenceStartDate();
+        LocalDate absenceEndDate = absenceCertificate.get().getAbsenceEndDate();
+
+        AbsenceCertificatesDto absenceCertificatesDto = AbsenceCertificatesDto.builder()
+                .id(absenceCertificate.get().getId())
+                .title(absenceCertificateTitle)
+                .startDate(absenceStartDate)
+                .endDate(absenceEndDate)
+                .build();
+
+
         //응답 Dto 생성
         ApplyDetailDto applyDetailDto = ApplyDetailDto.from(
                 applyDate,
@@ -198,7 +236,9 @@ public class ApplyService {
                 amountFormat(totalAmount),
                 amountFormat(subsidy),
                 amountFormat(copay),
-                status
+                status,
+                medicalCertificatesDto,
+                absenceCertificatesDto
         );
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"신청 내역 세부내용 조회에 성공하였습니다.", applyDetailDto);
     }
