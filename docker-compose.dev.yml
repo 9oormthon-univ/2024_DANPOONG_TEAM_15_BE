@@ -15,6 +15,9 @@ services:
       OCR_API_SECRET: ${OCR_API_SECRET}
       OCR_API_URL: ${OCR_API_URL}
       OCR_TEMPLATE_IDS: ${OCR_TEMPLATE_IDS}
+      KAKAOPAY_SECRET_KEY: ${KAKAOPAY_SECRET_KEY}
+      CID: ${CID}
+
       SPRING_PROFILES_ACTIVE: dev
     depends_on:
       db:
