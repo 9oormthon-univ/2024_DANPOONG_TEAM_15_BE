@@ -5,6 +5,9 @@ spring:
     name: Ivory
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
 cloud:
   aws:
     s3:

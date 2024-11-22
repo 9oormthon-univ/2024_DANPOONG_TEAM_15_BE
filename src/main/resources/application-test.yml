@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+cloud:
+  aws:
+    s3:
+      bucket: test-bucket
+    credentials:
+      access-key: test-access-key
+      secret-key: test-secret-key
+
+ocr:
+  api:
+    secret-key: test-secret-key
+    url: test-url
+    template-ids: test-template-ids
+kakaopay:
+  secretKey: test-secret-key
+  cid: test-cid
+
+jwt:
+  secret: dGVzdC1zZWNyZXQta2V5
