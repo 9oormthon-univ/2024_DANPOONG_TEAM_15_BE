@@ -19,6 +19,3 @@ logging:
         type: trace
     com:
       ivory.ivory: debug
-
-jwt:
-  secret: ${JWT_SECRET}

@@ -1,0 +1,45 @@
+services:
+  backend:
+    image: sandwich5011/ivory-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: ${DB_URL}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ACCESS_KEY: ${ACCESS_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      OCR_API_SECRET: ${OCR_API_SECRET}
+      OCR_API_URL: ${OCR_API_URL}
+      OCR_TEMPLATE_IDS: ${OCR_TEMPLATE_IDS}
+      KAKAOPAY_SECRET_KEY: ${KAKAOPAY_SECRET_KEY}
+      CID: ${CID}
+
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 40
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
