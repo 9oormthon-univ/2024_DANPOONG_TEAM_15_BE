@@ -15,8 +15,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         // 인증정보 허용
         config.setAllowCredentials(false); // 일단 이렇게..
-        //config.addAllowedOrigin("http://localhost:3000"); // React 애플리케이션 URL
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://danpoong-ivory.vercel.app/");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
 

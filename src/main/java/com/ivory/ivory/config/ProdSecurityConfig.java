@@ -59,7 +59,7 @@ public class ProdSecurityConfig {
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
-                        ).denyAll()
+                        ).permitAll()
                         .requestMatchers("/api/v1/auth/**","/api/v1/apply/payments/**").permitAll()
                         .anyRequest().authenticated()
                 );
