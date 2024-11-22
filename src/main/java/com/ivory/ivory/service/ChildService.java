@@ -85,7 +85,7 @@ public class ChildService {
             LocalDate nowDate = LocalDate.now();
             Long age = calculateAge(childBirthDate, nowDate);
 
-            String recentApplyStatus = "신청 내역 없음";
+            String recentApplyStatus = "아직 신청 내역이 없습니다";
             //신청 상태
             Apply apply = applyRepository.findFirstByChild_IdOrderByCreateAt(child.getId());
             if (apply != null) {
