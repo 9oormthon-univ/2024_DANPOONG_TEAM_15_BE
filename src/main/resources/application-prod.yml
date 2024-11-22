@@ -3,3 +3,22 @@ spring:
     url: ${DB_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        use_sql_comments: false
+  sql:
+    init:
+      mode: never
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: error
+        type: error
+    com:
+      ivory.ivory: info
