@@ -56,7 +56,8 @@ public class DevSecurityConfig {
                         // Swagger 경로 예외 처리
                         .requestMatchers(
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/actuator/health"
                         ).permitAll()
 
                         // 인증 없이 허용할 추가 경로
