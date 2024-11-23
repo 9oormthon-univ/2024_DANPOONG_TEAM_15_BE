@@ -17,7 +17,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://danpoong-ivory.vercel.app/");
-        config.addAllowedOrigin("https://danpoong-ivory.vercel.app/swagger-ui/index.html#/");
+        config.addAllowedOrigin("https://ivorygroup.click/swagger-ui/index.html#/");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
 
