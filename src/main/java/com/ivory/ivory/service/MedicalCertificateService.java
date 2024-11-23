@@ -2,6 +2,7 @@ package com.ivory.ivory.service;
 
 import com.ivory.ivory.domain.AbsenceCertificate;
 import com.ivory.ivory.domain.Child;
+import com.ivory.ivory.domain.Disease;
 import com.ivory.ivory.domain.MedicalCertificate;
 import com.ivory.ivory.dto.AbsenceCertificateRequestDto;
 import com.ivory.ivory.dto.AbsenceCertificateResponseDto;
@@ -60,12 +61,11 @@ public class MedicalCertificateService {
             String diagnosisContent = parseData.get("의견");
             String doctorName = parseData.get("의사명");
 
-
             MedicalCertificate medicalCertificate = MedicalCertificate.builder()
                     .name(name)
                     .address(address)
                     .diagnosisDate(diagnosisDate != null ? DateUtil.parseToLocalDate(diagnosisDate) : null)
-                    .diagnosisName(diagnosisName)
+                    .disease(Disease.findByDiagnosisName(diagnosisName))
                     .diagnosisContent(diagnosisContent)
                     .doctorName(doctorName)
                     .child(child)
@@ -78,7 +78,7 @@ public class MedicalCertificateService {
                     .name(medicalCertificate.getName())
                     .address(medicalCertificate.getAddress())
                     .diagnosisDate(medicalCertificate.getDiagnosisDate())
-                    .diagnosisName(medicalCertificate.getDiagnosisName())
+                    .diagnosisName(medicalCertificate.getDisease().getName())
                     .diagnosisContent(medicalCertificate.getDiagnosisContent())
                     .doctorName(medicalCertificate.getDoctorName())
                     .build();
@@ -147,7 +147,7 @@ public class MedicalCertificateService {
                     .name(medicalCertificate.getName())
                     .address(medicalCertificate.getAddress())
                     .diagnosisDate(medicalCertificate.getDiagnosisDate())
-                    .diagnosisName(medicalCertificate.getDiagnosisName())
+                    .diagnosisName(medicalCertificate.getDisease().getName())
                     .diagnosisContent(medicalCertificate.getDiagnosisContent())
                     .doctorName(medicalCertificate.getDoctorName())
                     .build();
