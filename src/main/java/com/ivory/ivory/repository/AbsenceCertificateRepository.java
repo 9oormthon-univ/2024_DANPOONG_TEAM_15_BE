@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface AbsenceCertificateRepository extends JpaRepository<AbsenceCertificate, Long> {
     Page<AbsenceCertificate> findAllByChildId(Long childId, Pageable pageable);
-    Optional<AbsenceCertificate> findByChild_Id(Long childId);
+    Optional<AbsenceCertificate> findById(Long childId);
 }

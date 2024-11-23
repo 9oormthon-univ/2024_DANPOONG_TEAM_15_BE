@@ -166,8 +166,8 @@ public class ApplyService {
         }
 
         Optional<Child> child = childRepository.findById(apply.get().getChild().getId());
-        Optional<MedicalCertificate> medicalCertificate = medicalCertificateRepository.findByChild_Id(child.get().getId());
-        Optional<AbsenceCertificate> absenceCertificate = absenceCertificateRepository.findByChild_Id(child.get().getId());
+        Optional<MedicalCertificate> medicalCertificate = medicalCertificateRepository.findById(apply.get().getMedicalCertificate().getId());
+        Optional<AbsenceCertificate> absenceCertificate = absenceCertificateRepository.findById(apply.get().getAbsenceCertificate().getId());
 
         //신청 날짜
         String applyDate = getApplyDate(apply.get().getCreateAt());

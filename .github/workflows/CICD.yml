@@ -51,19 +51,15 @@ jobs:
     steps:
       # 1. 기존의 컨테이너를 중지시킵니다
       - name: Stop existing containers
-        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+        run: sudo docker stop ${{ secrets.DOCKERHUB_USERNAME }}/ivory-backend
   
       # 2. 기존의 컨테이너를 제거합니다
       - name: Remove existing containers
-        run: sudo docker rm $(sudo docker ps -a -q) 2>/dev/null || true
+        run: sudo docker rm ${{ secrets.DOCKERHUB_USERNAME }}/ivory-backend
   
       # 3. 기존의 이미지를 제거합니다
       - name: Remove existing images
-        run: sudo docker rmi $(sudo docker images -q) 2>/dev/null || true
-  
-      # 4. 사용하지 않는 볼륨을 제거합니다
-      - name: Remove unused volumes
-        run: sudo docker volume prune -f
+        run: sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/ivory-backend
 
       # 5. Git 최신 상태로 업데이트 (git pull)
       - name: Pull latest changes
