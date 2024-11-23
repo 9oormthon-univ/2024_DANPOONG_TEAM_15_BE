@@ -49,16 +49,16 @@ jobs:
     runs-on: self-hosted
   
     steps:
-      # 1. 기존의 컨테이너를 중지시킵니다
-      - name: Stop existing containers
-        run: sudo docker stop ${{ secrets.DOCKERHUB_USERNAME }}/ivory-backend
-  
-      # 2. 기존의 컨테이너를 제거합니다
-      - name: Remove existing containers
-        run: sudo docker rm ${{ secrets.DOCKERHUB_USERNAME }}/ivory-backend
-  
-      # 3. 기존의 이미지를 제거합니다
-      - name: Remove existing images
+      # 1. backend 서비스 중지
+      - name: Stop backend service
+        run: sudo docker-compose -f docker-compose.prod.yml stop backend
+
+      # 2. backend 서비스 컨테이너 제거
+      - name: Remove backend container
+        run: sudo docker-compose -f docker-compose.prod.yml rm -f backend
+
+      # 3. backend 이미지 제거
+      - name: Remove backend image
         run: sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/ivory-backend
 
       # 5. Git 최신 상태로 업데이트 (git pull)
