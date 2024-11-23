@@ -3,6 +3,8 @@ package com.ivory.ivory.domain;
 import com.ivory.ivory.util.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,8 +38,9 @@ public class MedicalCertificate extends BaseEntity {
     @Column(name = "diagnosis_date", nullable = true)
     private LocalDate diagnosisDate;
 
-    @Column(name = "diagnosis_name", nullable = true)
-    private String diagnosisName;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "disease", nullable = true)
+    private Disease disease;
 
     @Column(name = "diagnosis_content", nullable = true)
     private String diagnosisContent;
@@ -50,11 +53,11 @@ public class MedicalCertificate extends BaseEntity {
     private Child child;
 
     @Builder
-    public MedicalCertificate(String name, String address, LocalDate diagnosisDate, String diagnosisName, String diagnosisContent, String doctorName, Child child) {
+    public MedicalCertificate(String name, String address, LocalDate diagnosisDate, Disease disease, String diagnosisContent, String doctorName, Child child) {
         this.name = name;
         this.address = address;
         this.diagnosisDate = diagnosisDate;
-        this.diagnosisName = diagnosisName;
+        this.disease = disease;
         this.diagnosisContent = diagnosisContent;
         this.doctorName = doctorName;
         this.child = child;
