@@ -14,9 +14,10 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         // 인증정보 허용
-        config.setAllowCredentials(false); // 일단 이렇게..
+        config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://danpoong-ivory.vercel.app/");
+        config.addAllowedOrigin("https://danpoong-ivory.vercel.app/swagger-ui/index.html");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
 
