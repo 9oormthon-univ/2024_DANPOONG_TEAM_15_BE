@@ -47,11 +47,11 @@ public class Apply extends BaseEntity {
     @JoinColumn(name="child_id")
     private Child child;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="medical_certificate_id")
     private MedicalCertificate medicalCertificate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="absence_certificate_id")
     private AbsenceCertificate absenceCertificate;
 
