@@ -29,7 +29,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void signup(SignUpDto signUpDto) {
+    public TokenDto signup(SignUpDto signUpDto) {
         if (memberRepository.existsByEmail(signUpDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 가입되어 있는 유저입니다.");
         }
@@ -37,6 +37,21 @@ public class AuthService {
         Member member = signUpDto.toMember(passwordEncoder);
 
         memberRepository.save(member);
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(signUpDto.getEmail(), signUpDto.getPassword());
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .key(authentication.getName())
+                .value(tokenDto.getRefreshToken())
+                .build();
+        refreshTokenRepository.save(refreshToken);
+
+        return tokenDto;
     }
 
     @Transactional
