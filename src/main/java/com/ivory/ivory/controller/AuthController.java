@@ -23,8 +23,8 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public CustomApiResponse<?> signup(@Valid @RequestBody SignUpDto signUpDto) {
-        authService.signup(signUpDto);
-        return CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"회원가입을 성공하였습니다.",null);
+        TokenDto dto = authService.signup(signUpDto);
+        return CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"회원가입을 성공하였습니다.", dto);
     }
 
     @PostMapping("/login")
