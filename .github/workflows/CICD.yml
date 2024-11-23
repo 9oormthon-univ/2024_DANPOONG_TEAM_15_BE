@@ -51,11 +51,11 @@ jobs:
     steps:
       # 1. 기존의 컨테이너를 중지시킵니다
       - name: Stop backend service
-        run: sudo docker-compose -f docker-compose.prod.yml stop backend
+        run: sudo docker stop Ivory-Backend
 
       # 2. backend 서비스 컨테이너 제거
       - name: Remove backend container
-        run: sudo docker-compose -f docker-compose.prod.yml rm -f backend
+        run: sudo docker rm Ivory-Backend
 
       # 3. backend 이미지 제거
       - name: Remove backend image

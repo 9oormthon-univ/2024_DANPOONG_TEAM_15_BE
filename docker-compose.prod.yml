@@ -1,5 +1,6 @@
 services:
   backend:
+    container_name: Ivory-Backend
     image: sandwich5011/ivory-backend
     ports:
       - "8080:8080"
