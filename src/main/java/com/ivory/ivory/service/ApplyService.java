@@ -92,9 +92,11 @@ public class ApplyService {
         //엔티티 생성
         Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,member.get(),child.get(),medicalCertificate.get(),absenceCertificate.get());
         //DB에 저장
-        serviceRepository.save(apply);
+        Apply newApply = serviceRepository.save(apply);
+
+        ApplyRequestDto applyRequestDto = ApplyRequestDto.of(newApply.getId());
         //응답 생성
-        CustomApiResponse<?> response = CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"서비스가 성공적으로 신청되었습니다.",null);
+        CustomApiResponse<?> response = CustomApiResponse.createSuccess(HttpStatus.CREATED.value(),"서비스가 성공적으로 신청되었습니다.",applyRequestDto);
 
         return response;
     }
