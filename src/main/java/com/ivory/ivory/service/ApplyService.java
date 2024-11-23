@@ -122,6 +122,9 @@ public class ApplyService {
         //응답 dto 생성
         List<ApplyListDto> applyListDto = new ArrayList<>();
         applyList.forEach(apply -> {
+            //신청 기본키
+            Long id = apply.getId();
+
             //이름
             String name = child.get().getName();
 
@@ -138,7 +141,7 @@ public class ApplyService {
             Status serviceStatus = getNowStatus(apply.getStartDate(),apply.getEndDate());
             String status = getStatus(serviceStatus);
 
-            applyListDto.add(ApplyListDto.from(name,applyDate,careDate,careTime,status));
+            applyListDto.add(ApplyListDto.from(id,name,applyDate,careDate,careTime,status));
         });
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"신청 목록 조회에 성공했습니다.",applyListDto);
     }
