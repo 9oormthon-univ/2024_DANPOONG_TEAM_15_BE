@@ -60,7 +60,7 @@ public class KakaoPayService {
         parameters.put("total_amount",copay);
         parameters.put("vat_amount","200");
         parameters.put("tax_free_amount","0");
-        parameters.put("approval_url","http://localhost:3000/apply/payments/success"); //TODO: 추후 배포된 도메인으로 수정해야함
+        parameters.put("approval_url","https://danpoong-ivory.vercel.app/apply/payments/success"); // 도메인
         parameters.put("fail_url","http://localhost:3000/apply/payments/fail");
         parameters.put("cancel_url","http://localhost:3000/apply/payments/cancel");
 
