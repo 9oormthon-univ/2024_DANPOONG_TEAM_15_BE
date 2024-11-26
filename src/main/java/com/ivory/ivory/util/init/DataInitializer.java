@@ -1,4 +1,4 @@
-package com.ivory.ivory.init;
+package com.ivory.ivory.util.init;
 
 import com.ivory.ivory.domain.Caregiver;
 import com.ivory.ivory.repository.CaregiverRepository;
