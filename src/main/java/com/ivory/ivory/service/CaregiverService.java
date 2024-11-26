@@ -3,6 +3,7 @@ package com.ivory.ivory.service;
 import com.ivory.ivory.domain.*;
 import com.ivory.ivory.dto.ApplyListDto;
 import com.ivory.ivory.dto.CareDetailDto;
+import com.ivory.ivory.dto.CareDto;
 import com.ivory.ivory.dto.CareListDto;
 import com.ivory.ivory.repository.ApplyRepository;
 import com.ivory.ivory.repository.CaregiverRepository;
@@ -127,4 +128,26 @@ public class CaregiverService {
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "돌봄이 매칭 되었습니다.", null);
     }
 
+
+    public CustomApiResponse<?> getMatchedCare(Long currentMemberId) {
+        Optional<Caregiver> caregiver = caregiverRepository.findById(currentMemberId);
+        if(caregiver.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"돌보미만 조회가 가능합니다.");
+        }
+        Optional <Apply> apply = applyRepository.findFirstByStatusOrderByCreateAtDesc(Status.MATCHED);
+        if(apply.isEmpty()) {
+            return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "아직 매칭된 돌봄 활동이 없습니다.", null);
+        }
+        Optional<Child> child = childRepository.findById(apply.get().getChild().getId());
+
+        Long applyId = apply.get().getId();
+        String careDate = apply.get().getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String careTime = applyService.getCareTime(apply.get().getStartDate(),apply.get().getEndDate());
+        String childName = child.get().getName();
+        Long age = childService.calculateAge(child.get().getBirth(), LocalDate.now());
+        String image = child.get().getImage();
+
+        CareDto careDto = CareDto.of(applyId,careDate,careTime,childName,age,image);
+        return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "매칭된 돌봄 활동이 조회 되었습니다.",careDto);
+    }
 }

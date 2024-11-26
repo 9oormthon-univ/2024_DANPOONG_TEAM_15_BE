@@ -34,4 +34,13 @@ public class CaregiverController {
         CustomApiResponse<?> response = caregiverService.AcceptCare(applyId);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping()
+    public ResponseEntity<?> getMatchedCare() {
+        Long currentMemberId = securityUtil.getCurrentMemberId();
+        CustomApiResponse<?> response = caregiverService.getMatchedCare(currentMemberId);
+        return ResponseEntity.ok(response);
+    }
+
+
 }
