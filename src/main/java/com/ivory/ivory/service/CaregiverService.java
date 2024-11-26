@@ -1,17 +1,22 @@
 package com.ivory.ivory.service;
 
 import com.ivory.ivory.domain.Apply;
+import com.ivory.ivory.domain.Authority;
+import com.ivory.ivory.domain.Caregiver;
 import com.ivory.ivory.dto.ApplyListDto;
 import com.ivory.ivory.dto.CareListDto;
 import com.ivory.ivory.repository.ApplyRepository;
+import com.ivory.ivory.repository.CaregiverRepository;
 import com.ivory.ivory.util.response.CustomApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +24,9 @@ public class CaregiverService {
 
     private final ApplyRepository applyRepository;
     private final ApplyService applyService;
+    private final CaregiverRepository caregiverRepository;
 
-    public CustomApiResponse<?> getCareList() {
+    public CustomApiResponse<?> getCareList(Long currentMemberId) {
         List<Apply> applyList = applyRepository.findAll();
         List<CareListDto> careListDto = new ArrayList<>();
         applyList.forEach(apply -> {
