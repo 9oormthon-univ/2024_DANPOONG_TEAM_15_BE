@@ -39,6 +39,9 @@ public class Apply extends BaseEntity {
     @Column(name="status", nullable = false)
     private Status status;
 
+    @Column(name="memo")
+    private String memo;
+
     @ManyToOne
     @JoinColumn(name="member_id")
     private Member member;
@@ -47,11 +50,11 @@ public class Apply extends BaseEntity {
     @JoinColumn(name="child_id")
     private Child child;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="medical_certificate_id")
     private MedicalCertificate medicalCertificate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="absence_certificate_id")
     private AbsenceCertificate absenceCertificate;
 
@@ -61,6 +64,7 @@ public class Apply extends BaseEntity {
             Long subsidy,
             IncomeType incomeType,
             Status status,
+            String memo,
             Member member,
             Child child,
             MedicalCertificate medicalCertificate,
@@ -73,6 +77,7 @@ public class Apply extends BaseEntity {
                 .subsidy(subsidy)
                 .incomeType(incomeType)
                 .status(status)
+                .memo(memo)
                 .member(member)
                 .child(child)
                 .medicalCertificate(medicalCertificate)

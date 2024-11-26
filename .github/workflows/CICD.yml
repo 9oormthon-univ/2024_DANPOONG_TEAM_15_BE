@@ -49,7 +49,7 @@ jobs:
     runs-on: self-hosted
   
     steps:
-      # 1. backend 서비스 중지
+      # 1. 기존의 컨테이너를 중지시킵니다
       - name: Stop backend service
         run: sudo docker stop Ivory-Backend
 
