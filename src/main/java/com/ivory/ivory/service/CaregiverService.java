@@ -107,7 +107,8 @@ public class CaregiverService {
     //돌봄 수락
     //TODO : 소켓통신
     @Transactional
-    public CustomApiResponse<?> AcceptCare(Long applyId) {
+    public CustomApiResponse<?> AcceptCare(Long currentMemberId, Long applyId) {
+        Optional<Caregiver> caregiver = caregiverRepository.findById(currentMemberId);
         //신청 내역 조회
         Optional<Apply> applyOptional = applyRepository.findById(applyId);
         if (applyOptional.isEmpty()) {
@@ -118,7 +119,8 @@ public class CaregiverService {
 
         //상태 변경
         if (apply.getStatus() == Status.YET) {
-            apply.setStatus(Status.MATCHED);
+            apply.setStatus(Status.MATCHED); //상태변경
+            apply.setCaregiver(caregiver.get()); //돌봄이 연관관계 맺기
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 매칭된 돌봄입니다.");
         }
@@ -140,11 +142,22 @@ public class CaregiverService {
         }
         Optional<Child> child = childRepository.findById(apply.get().getChild().getId());
 
+        //기본키
         Long applyId = apply.get().getId();
+
+        //돌봄 날짜
         String careDate = apply.get().getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        //돌봄 시간
         String careTime = applyService.getCareTime(apply.get().getStartDate(),apply.get().getEndDate());
+
+        //아이 이름
         String childName = child.get().getName();
+
+        //아이 나이
         Long age = childService.calculateAge(child.get().getBirth(), LocalDate.now());
+
+        //아이 사진
         String image = child.get().getImage();
 
         CareDto careDto = CareDto.of(applyId,careDate,careTime,childName,age,image);

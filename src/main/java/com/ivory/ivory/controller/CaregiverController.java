@@ -31,7 +31,8 @@ public class CaregiverController {
 
     @PostMapping("/{applyId}")
     public ResponseEntity<?> AcceptCare (@PathVariable Long applyId) {
-        CustomApiResponse<?> response = caregiverService.AcceptCare(applyId);
+        Long currentMemberId = securityUtil.getCurrentMemberId();
+        CustomApiResponse<?> response = caregiverService.AcceptCare(currentMemberId,applyId);
         return ResponseEntity.ok(response);
     }
 
