@@ -39,6 +39,9 @@ public class Apply extends BaseEntity {
     @Column(name="status", nullable = false)
     private Status status;
 
+    @Column(name="memo")
+    private String memo;
+
     @ManyToOne
     @JoinColumn(name="member_id")
     private Member member;
@@ -61,6 +64,7 @@ public class Apply extends BaseEntity {
             Long subsidy,
             IncomeType incomeType,
             Status status,
+            String memo,
             Member member,
             Child child,
             MedicalCertificate medicalCertificate,
@@ -73,6 +77,7 @@ public class Apply extends BaseEntity {
                 .subsidy(subsidy)
                 .incomeType(incomeType)
                 .status(status)
+                .memo(memo)
                 .member(member)
                 .child(child)
                 .medicalCertificate(medicalCertificate)
