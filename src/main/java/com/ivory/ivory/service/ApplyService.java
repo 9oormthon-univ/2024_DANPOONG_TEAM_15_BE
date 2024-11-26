@@ -287,6 +287,7 @@ public class ApplyService {
     }
 
     //현재 서비스 상태 계산 메소드
+    //TODO : MATCHED 일 때 추가 해야함
     public Status getNowStatus(LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(startDate)) {
@@ -314,6 +315,7 @@ public class ApplyService {
     public String getStatus(Status Status) {
         switch (Status) {
             case YET: return "서비스 신청 완료";
+            case MATCHED: return "돌보미 매칭";
             case IN_PROGRESS: return "돌봄 서비스 이용 중";
             case COMPLETE: return "이용 완료";
             default: return "";
