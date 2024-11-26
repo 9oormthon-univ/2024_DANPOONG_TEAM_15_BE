@@ -59,24 +59,30 @@ public class AuthService {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
-        // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
-        //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
+        // 2. 실제로 검증 (사용자 비밀번호 체크)
+        //    authenticate 메서드가 실행될 때 CustomUserDetailsService의 loadUserByUsername 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        // 3. 인증된 사용자 정보 확인
+        String username = authentication.getName(); // username (email)
+
+        String auth = authentication.getAuthorities().toString();
+
+        // 4. JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
-        // 4. RefreshToken 저장
+        // 5. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
+                .key(username)
                 .value(tokenDto.getRefreshToken())
                 .build();
 
         refreshTokenRepository.save(refreshToken);
 
-        // 5. 토큰 발급
+        // 6. 토큰 발급
         return tokenDto;
     }
+
 
     @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
