@@ -28,4 +28,10 @@ public class CaregiverController {
         CustomApiResponse<?> response = caregiverService.getCareDetail(currentMemberId,applyId);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/{applyId}")
+    public ResponseEntity<?> AcceptCare (@PathVariable Long applyId) {
+        CustomApiResponse<?> response = caregiverService.AcceptCare(applyId);
+        return ResponseEntity.ok(response);
+    }
 }

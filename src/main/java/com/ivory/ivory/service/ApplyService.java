@@ -87,10 +87,12 @@ public class ApplyService {
         subsidy = getSubsidy(incomeType,age,totalAmount);
 
         //서비스 상태 계산
-        Status status = getNowStatus(startDate,endDate);
+        Status status = Status.YET;
+
+        Caregiver caregiver = null;
 
         //엔티티 생성
-        Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,dto.getMemo(),member.get(),child.get(),medicalCertificate.get(),absenceCertificate.get());
+        Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,dto.getMemo(),member.get(),child.get(),medicalCertificate.get(),absenceCertificate.get(),caregiver);
         //DB에 저장
         Apply newApply = serviceRepository.save(apply);
 
@@ -140,7 +142,7 @@ public class ApplyService {
             String careTime = getCareTime(apply.getStartDate(),apply.getEndDate());
 
             //호출 시점의 서비스 상태 조회
-            Status serviceStatus = getNowStatus(apply.getStartDate(),apply.getEndDate());
+            Status serviceStatus = getNowStatus(apply.getStartDate(),apply.getEndDate(),apply.getStatus());
             String status = getStatus(serviceStatus);
 
             applyListDto.add(ApplyListDto.from(id,name,applyDate,careDate,careTime,status));
@@ -206,7 +208,7 @@ public class ApplyService {
         Long copay = totalAmount - subsidy;
 
         //호출 시점의 상태
-        Status nowStatus = getNowStatus(startDate,endDate);
+        Status nowStatus = getNowStatus(startDate,endDate,apply.get().getStatus());
         String status = getStatus(nowStatus);
 
         //진단서 관련 정보
@@ -287,12 +289,13 @@ public class ApplyService {
     }
 
     //현재 서비스 상태 계산 메소드
-    //TODO : MATCHED 일 때 추가 해야함
-    public Status getNowStatus(LocalDateTime startDate, LocalDateTime endDate) {
+    public Status getNowStatus(LocalDateTime startDate, LocalDateTime endDate,Status status) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(startDate)) {
+        if (now.isBefore(startDate) && status.equals(Status.YET)) {
             return Status.YET;
-        } else if (!now.isAfter(endDate)) {
+        } else if (now.isBefore(endDate) && status.equals(Status.MATCHED)) {
+            return Status.MATCHED;
+        } else if (!now.isAfter(endDate) && status.equals(Status.MATCHED)) {
             return Status.IN_PROGRESS;
         } else {
             return Status.COMPLETE;

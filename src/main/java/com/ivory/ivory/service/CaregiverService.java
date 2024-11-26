@@ -8,6 +8,7 @@ import com.ivory.ivory.repository.ApplyRepository;
 import com.ivory.ivory.repository.CaregiverRepository;
 import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.util.response.CustomApiResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
@@ -101,4 +102,29 @@ public class CaregiverService {
         );
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"돌봄 내용이 상세 조회되었습니다.",careDetailDto);
     }
+
+    //돌봄 수락
+    //TODO : 소켓통신
+    @Transactional
+    public CustomApiResponse<?> AcceptCare(Long applyId) {
+        //신청 내역 조회
+        Optional<Apply> applyOptional = applyRepository.findById(applyId);
+        if (applyOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 신청 내역입니다.");
+        }
+
+        Apply apply = applyOptional.get();
+
+        //상태 변경
+        if (apply.getStatus() == Status.YET) {
+            apply.setStatus(Status.MATCHED);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 매칭된 돌봄입니다.");
+        }
+
+        applyRepository.save(apply);
+
+        return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "돌봄이 매칭 되었습니다.", null);
+    }
+
 }

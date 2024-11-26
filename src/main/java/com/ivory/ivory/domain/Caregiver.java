@@ -11,7 +11,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Caregiver {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "caregiver_seq")
+    @SequenceGenerator(
+            name = "caregiver_seq",                // 시퀀스 제너레이터 이름
+            sequenceName = "caregiver_sequence",  // 실제 데이터베이스 시퀀스 이름
+            initialValue = 100,                   // 시작 값
+            allocationSize = 1                    // 증가 값
+    )
     @Column(name="id")
     private Long id;
 
