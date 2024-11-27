@@ -82,8 +82,6 @@ public class CaregiverService {
         Long age = childService.calculateAge(child.get().getBirth(), LocalDate.now());
         //아이 진단명
         String diagnosisName = apply.get().getMedicalCertificate().getDisease().getName();
-        //진료 내용
-        String diagnosisContent = apply.get().getMedicalCertificate().getDiagnosisContent();
         //아이 사진
         String image = child.get().getImage();
 
@@ -97,7 +95,6 @@ public class CaregiverService {
                 birthDate,
                 age,
                 diagnosisName,
-                diagnosisContent,
                 image
         );
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"돌봄 내용이 상세 조회되었습니다.",careDetailDto);

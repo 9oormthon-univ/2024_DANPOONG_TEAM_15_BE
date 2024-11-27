@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,9 +40,14 @@ public class AbsenceCertificateService {
     private final AbsenceCertificateRepository absenceCertificateRepository;
     private final ChildRepository childRepository;
     private final OcrService ocrService;
+    @Qualifier("certificateOcrParser")
     private final OcrParser certificateOcrParser;
 
-    //TODO: 미등원 확인서 검증 로직 추가
+    @Value("${ocr.api.url}")
+    private String apiUrl;
+    @Value("${ocr.api.secret-key}")
+    private String secretKey;
+
     @Transactional
     public AbsenceCertificateResponseDto addAbsenceCertificate(
             AbsenceCertificateRequestDto absenceCertificateRequestDto, Long childId, Long memberId) {
@@ -51,7 +58,7 @@ public class AbsenceCertificateService {
                 throw new IllegalArgumentException("본인의 자녀에 대한 미등원 확인서만 등록할 수 있습니다.");
             }
 
-            String jsonResponse = ocrService.processOcr(absenceCertificateRequestDto.getFile());
+            String jsonResponse = ocrService.processOcr(absenceCertificateRequestDto.getFile(), apiUrl, secretKey);
             Map<String, String> parseData = certificateOcrParser.parse(jsonResponse);
 
             String name = parseData.get("이름"); // 없으면 null
