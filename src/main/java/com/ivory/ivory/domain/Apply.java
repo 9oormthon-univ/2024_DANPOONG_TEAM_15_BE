@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name="apply")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Apply extends BaseEntity {
@@ -39,6 +40,9 @@ public class Apply extends BaseEntity {
     @Column(name="status", nullable = false)
     private Status status;
 
+    @Column(name="memo")
+    private String memo;
+
     @ManyToOne
     @JoinColumn(name="member_id")
     private Member member;
@@ -55,16 +59,22 @@ public class Apply extends BaseEntity {
     @JoinColumn(name="absence_certificate_id")
     private AbsenceCertificate absenceCertificate;
 
+    @ManyToOne
+    @JoinColumn(name="caregiver_id")
+    private Caregiver caregiver;
+
     public static Apply toEntity(
             ApplyDto service,
             Long totalAmount,
             Long subsidy,
             IncomeType incomeType,
             Status status,
+            String memo,
             Member member,
             Child child,
             MedicalCertificate medicalCertificate,
-            AbsenceCertificate absenceCertificate
+            AbsenceCertificate absenceCertificate,
+            Caregiver caregiver
     ) {
         return Apply.builder()
                 .startDate(service.getStartDate())
@@ -73,10 +83,12 @@ public class Apply extends BaseEntity {
                 .subsidy(subsidy)
                 .incomeType(incomeType)
                 .status(status)
+                .memo(memo)
                 .member(member)
                 .child(child)
                 .medicalCertificate(medicalCertificate)
                 .absenceCertificate(absenceCertificate)
+                .caregiver(caregiver)
                 .build();
     }
 }

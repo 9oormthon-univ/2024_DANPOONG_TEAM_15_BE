@@ -19,6 +19,7 @@ public class ApplyDetailDto {
     private String incomeType;
     private String careDate;
     private String careTime;
+    private String memo;
     private String totalAmount;
     private String subsidy;
     private String copay;
@@ -34,6 +35,7 @@ public class ApplyDetailDto {
             String incomeType,
             String careDate,
             String careTime,
+            String memo,
             String totalAmount,
             String subsidy,
             String copay,
@@ -49,6 +51,7 @@ public class ApplyDetailDto {
                 .incomeType(incomeType)
                 .careDate(careDate)
                 .careTime(careTime)
+                .memo(memo)
                 .totalAmount(totalAmount)
                 .subsidy(subsidy)
                 .copay(copay)

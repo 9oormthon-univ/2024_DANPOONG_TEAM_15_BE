@@ -14,19 +14,14 @@ public class MedicalCertificateResponseDto {
     private String address;
     private LocalDate diagnosisDate;
     private String diagnosisName;
-    private String diagnosisContent;
-    private String doctorName;
 
     @Builder
     public MedicalCertificateResponseDto(Long id, String name, String address, LocalDate diagnosisDate,
-                                         String diagnosisName,
-                                         String diagnosisContent, String doctorName) {
+                                         String diagnosisName) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.diagnosisDate = diagnosisDate;
         this.diagnosisName = diagnosisName;
-        this.diagnosisContent = diagnosisContent;
-        this.doctorName = doctorName;
     }
 }

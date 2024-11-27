@@ -87,10 +87,12 @@ public class ApplyService {
         subsidy = getSubsidy(incomeType,age,totalAmount);
 
         //서비스 상태 계산
-        Status status = getNowStatus(startDate,endDate);
+        Status status = Status.YET;
+
+        Caregiver caregiver = null;
 
         //엔티티 생성
-        Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,member.get(),child.get(),medicalCertificate.get(),absenceCertificate.get());
+        Apply apply = Apply.toEntity(dto,totalAmount,subsidy,incomeType,status,dto.getMemo(),member.get(),child.get(),medicalCertificate.get(),absenceCertificate.get(),caregiver);
         //DB에 저장
         Apply newApply = serviceRepository.save(apply);
 
@@ -140,7 +142,7 @@ public class ApplyService {
             String careTime = getCareTime(apply.getStartDate(),apply.getEndDate());
 
             //호출 시점의 서비스 상태 조회
-            Status serviceStatus = getNowStatus(apply.getStartDate(),apply.getEndDate());
+            Status serviceStatus = getNowStatus(apply.getStartDate(),apply.getEndDate(),apply.getStatus());
             String status = getStatus(serviceStatus);
 
             applyListDto.add(ApplyListDto.from(id,name,applyDate,careDate,careTime,status));
@@ -193,6 +195,9 @@ public class ApplyService {
         //서비스 이용시간
         String careTime = getCareTime(startDate,endDate);
 
+        //돌봄 메모
+        String memo = apply.get().getMemo();
+
         //기본 요금
         Long totalAmount = apply.get().getTotalAmount();
 
@@ -203,7 +208,7 @@ public class ApplyService {
         Long copay = totalAmount - subsidy;
 
         //호출 시점의 상태
-        Status nowStatus = getNowStatus(startDate,endDate);
+        Status nowStatus = getNowStatus(startDate,endDate,apply.get().getStatus());
         String status = getStatus(nowStatus);
 
         //진단서 관련 정보
@@ -238,6 +243,7 @@ public class ApplyService {
                 incomeType.getDescription(),
                 careDate,
                 careTime,
+                memo,
                 amountFormat(totalAmount),
                 amountFormat(subsidy),
                 amountFormat(copay),
@@ -283,11 +289,13 @@ public class ApplyService {
     }
 
     //현재 서비스 상태 계산 메소드
-    public Status getNowStatus(LocalDateTime startDate, LocalDateTime endDate) {
+    public Status getNowStatus(LocalDateTime startDate, LocalDateTime endDate,Status status) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(startDate)) {
+        if (now.isBefore(startDate) && status.equals(Status.YET)) {
             return Status.YET;
-        } else if (!now.isAfter(endDate)) {
+        } else if (now.isBefore(endDate) && status.equals(Status.MATCHED)) {
+            return Status.MATCHED;
+        } else if (!now.isAfter(endDate) && status.equals(Status.MATCHED)) {
             return Status.IN_PROGRESS;
         } else {
             return Status.COMPLETE;
@@ -310,6 +318,7 @@ public class ApplyService {
     public String getStatus(Status Status) {
         switch (Status) {
             case YET: return "서비스 신청 완료";
+            case MATCHED: return "돌보미 매칭";
             case IN_PROGRESS: return "돌봄 서비스 이용 중";
             case COMPLETE: return "이용 완료";
             default: return "";
