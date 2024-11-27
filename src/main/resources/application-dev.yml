@@ -13,5 +13,9 @@ logging:
       hibernate:
         SQL: debug
         type: trace
+      springframework:
+        web:
+          socket: DEBUG
+        security: DEBUG
     com:
       ivory.ivory: debug

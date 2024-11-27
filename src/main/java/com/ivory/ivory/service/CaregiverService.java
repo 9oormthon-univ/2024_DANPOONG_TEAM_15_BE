@@ -1,7 +1,6 @@
 package com.ivory.ivory.service;
 
 import com.ivory.ivory.domain.*;
-import com.ivory.ivory.dto.ApplyListDto;
 import com.ivory.ivory.dto.CareDetailDto;
 import com.ivory.ivory.dto.CareDto;
 import com.ivory.ivory.dto.CareListDto;
@@ -11,13 +10,12 @@ import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.util.response.CustomApiResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,7 @@ public class CaregiverService {
     private final CaregiverRepository caregiverRepository;
     private final ChildRepository childRepository;
     private final ChildService childService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public CustomApiResponse<?> getCareList(Long currentMemberId) {
         Optional<Caregiver> caregiver = caregiverRepository.findById(currentMemberId);
@@ -105,11 +104,16 @@ public class CaregiverService {
     }
 
     //돌봄 수락
-    //TODO : 소켓통신
     @Transactional
     public CustomApiResponse<?> AcceptCare(Long currentMemberId, Long applyId) {
         Optional<Caregiver> caregiver = caregiverRepository.findById(currentMemberId);
-        //신청 내역 조회
+
+        String caregiverName = "김돌봄";
+
+        if (caregiver.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 돌보미입니다.");
+        }
+
         Optional<Apply> applyOptional = applyRepository.findById(applyId);
         if (applyOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 신청 내역입니다.");
@@ -117,17 +121,25 @@ public class CaregiverService {
 
         Apply apply = applyOptional.get();
 
-        //상태 변경
+        // 상태 변경
         if (apply.getStatus() == Status.YET) {
-            apply.setStatus(Status.MATCHED); //상태변경
-            apply.setCaregiver(caregiver.get()); //돌봄이 연관관계 맺기
+            apply.setStatus(Status.MATCHED);
+            apply.setCaregiver(caregiver.get());
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 매칭된 돌봄입니다.");
         }
 
         applyRepository.save(apply);
 
-        return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "돌봄이 매칭 되었습니다.", null);
+        // 사용자에게 알림 전송
+        String notificationMessage = String.format("돌보미 %s님이 신청을 수락했습니다.", caregiverName);
+
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/users/" + apply.getMember().getId().toString(),  // 모든 구독자가 받을 수 있는 브로드캐스트 경로
+                notificationMessage
+        );
+
+        return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "돌봄이 매칭되었습니다.", null);
     }
 
 
