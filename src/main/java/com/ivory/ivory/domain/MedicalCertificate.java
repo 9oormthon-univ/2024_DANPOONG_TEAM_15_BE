@@ -42,24 +42,16 @@ public class MedicalCertificate extends BaseEntity {
     @Column(name = "disease", nullable = true)
     private Disease disease;
 
-    @Column(name = "diagnosis_content", nullable = true)
-    private String diagnosisContent;
-
-    @Column(name = "doctor_name", nullable = true)
-    private String doctorName;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="child_id", nullable = false)
     private Child child;
 
     @Builder
-    public MedicalCertificate(String name, String address, LocalDate diagnosisDate, Disease disease, String diagnosisContent, String doctorName, Child child) {
+    public MedicalCertificate(String name, String address, LocalDate diagnosisDate, Disease disease, Child child) {
         this.name = name;
         this.address = address;
         this.diagnosisDate = diagnosisDate;
         this.disease = disease;
-        this.diagnosisContent = diagnosisContent;
-        this.doctorName = doctorName;
         this.child = child;
     }
 }

@@ -1,8 +1,8 @@
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 8MB
+      max-request-size: 8MB
   profiles:
     active: local
   application:
@@ -30,6 +30,10 @@ ocr:
         secret-key: ${OCR_API_SECRET}
         url: ${OCR_API_URL}
         template-ids: ${OCR_TEMPLATE_IDS}
+    medical-certificate:
+        api:
+            secret-key: ${MEDICAL_CERTIFICATE_OCR_API_SECRET_KEY}
+            url: ${MEDICAL_CERTIFICATE_OCR_API_URL}
 kakaopay:
     secretKey: ${KAKAOPAY_SECRET_KEY}
     cid: ${CID}

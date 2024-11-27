@@ -18,7 +18,6 @@ public class CareDetailDto {
     private String birthDate;
     private Long age;
     private String diagnosisName;
-    private String diagnosisContent;
     private String image;
 
     public static CareDetailDto from (
@@ -30,7 +29,6 @@ public class CareDetailDto {
             String birthDate,
             Long age,
             String diagnosisName,
-            String diagnosisContent,
             String image) {
         return CareDetailDto.builder()
                 .applyDate(applyDate)
@@ -41,7 +39,6 @@ public class CareDetailDto {
                 .birthDate(birthDate)
                 .age(age)
                 .diagnosisName(diagnosisName)
-                .diagnosisContent(diagnosisContent)
                 .image(image)
                 .build();
     }

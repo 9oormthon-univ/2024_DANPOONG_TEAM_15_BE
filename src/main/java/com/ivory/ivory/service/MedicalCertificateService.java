@@ -11,6 +11,7 @@ import com.ivory.ivory.dto.MedicalCertificateRequestDto;
 import com.ivory.ivory.dto.MedicalCertificateResponseDto;
 import com.ivory.ivory.dto.MedicalCertificatesDto;
 import com.ivory.ivory.dto.PageInfo;
+import com.ivory.ivory.ocr.MedicalCertificateOcrService;
 import com.ivory.ivory.ocr.OcrParser;
 import com.ivory.ivory.ocr.OcrService;
 import com.ivory.ivory.repository.AbsenceCertificateRepository;
@@ -24,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,10 +41,15 @@ import org.springframework.web.server.ResponseStatusException;
 public class MedicalCertificateService {
     private final MedicalCertificateRepository medicalCertificateRepository;
     private final ChildRepository childRepository;
-    private final OcrService ocrService;
-    private final OcrParser certificateOcrParser;
+    private final MedicalCertificateOcrService ocrService;
 
-    //TODO: 진단서 검증 로직 추가
+    @Qualifier("medicalCertificateOcrParser")
+    private final OcrParser medicalCertificateOcrParser;
+    @Value("${ocr.medical-certificate.api.url}")
+    private String apiUrl;
+    @Value("${ocr.medical-certificate.api.secret-key}")
+    private String secretKey;
+
     @Transactional
     public MedicalCertificateResponseDto addMedicalCertificate(MedicalCertificateRequestDto medicalCertificateRequestDto, Long childId, Long memberId) {
         try {
@@ -51,23 +59,20 @@ public class MedicalCertificateService {
                 throw new IllegalArgumentException("본인의 자녀에 대한 진단서만 등록할 수 있습니다.");
             }
 
-            String jsonResponse = ocrService.processOcr(medicalCertificateRequestDto.getFile());
-            Map<String, String> parseData = certificateOcrParser.parse(jsonResponse);
+            String jsonResponse = ocrService.processOcr(medicalCertificateRequestDto.getFile(), apiUrl, secretKey);
+            System.out.println(jsonResponse);
+            Map<String, String> parseData = medicalCertificateOcrParser.parse(jsonResponse);
 
-            String name = parseData.get("이름");
+            String name = parseData.get("환자성명");
             String address = parseData.get("주소");
-            String diagnosisDate = parseData.get("진단일");
+            String diagnosisDate = parseData.get("진단연월일");
             String diagnosisName = parseData.get("진단명");
-            String diagnosisContent = parseData.get("의견");
-            String doctorName = parseData.get("의사명");
 
             MedicalCertificate medicalCertificate = MedicalCertificate.builder()
                     .name(name)
                     .address(address)
                     .diagnosisDate(diagnosisDate != null ? DateUtil.parseToLocalDate(diagnosisDate) : null)
                     .disease(Disease.findByDiagnosisName(diagnosisName))
-                    .diagnosisContent(diagnosisContent)
-                    .doctorName(doctorName)
                     .child(child)
                     .build();
 
@@ -79,8 +84,6 @@ public class MedicalCertificateService {
                     .address(medicalCertificate.getAddress())
                     .diagnosisDate(medicalCertificate.getDiagnosisDate())
                     .diagnosisName(medicalCertificate.getDisease().getName())
-                    .diagnosisContent(medicalCertificate.getDiagnosisContent())
-                    .doctorName(medicalCertificate.getDoctorName())
                     .build();
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -148,8 +151,6 @@ public class MedicalCertificateService {
                     .address(medicalCertificate.getAddress())
                     .diagnosisDate(medicalCertificate.getDiagnosisDate())
                     .diagnosisName(medicalCertificate.getDisease().getName())
-                    .diagnosisContent(medicalCertificate.getDiagnosisContent())
-                    .doctorName(medicalCertificate.getDoctorName())
                     .build();
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

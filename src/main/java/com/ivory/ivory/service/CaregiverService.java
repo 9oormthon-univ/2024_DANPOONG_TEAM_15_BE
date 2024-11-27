@@ -1,7 +1,6 @@
 package com.ivory.ivory.service;
 
 import com.ivory.ivory.domain.*;
-import com.ivory.ivory.dto.ApplyListDto;
 import com.ivory.ivory.dto.CareDetailDto;
 import com.ivory.ivory.dto.CareDto;
 import com.ivory.ivory.dto.CareListDto;
@@ -11,13 +10,11 @@ import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.util.response.CustomApiResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +80,6 @@ public class CaregiverService {
         Long age = childService.calculateAge(child.get().getBirth(), LocalDate.now());
         //아이 진단명
         String diagnosisName = apply.get().getMedicalCertificate().getDisease().getName();
-        //진료 내용
-        String diagnosisContent = apply.get().getMedicalCertificate().getDiagnosisContent();
         //아이 사진
         String image = child.get().getImage();
 
@@ -98,7 +93,6 @@ public class CaregiverService {
                 birthDate,
                 age,
                 diagnosisName,
-                diagnosisContent,
                 image
         );
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"돌봄 내용이 상세 조회되었습니다.",careDetailDto);
