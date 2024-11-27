@@ -105,8 +105,6 @@ public class CaregiverService {
     public CustomApiResponse<?> AcceptCare(Long currentMemberId, Long applyId) {
         Optional<Caregiver> caregiver = caregiverRepository.findById(currentMemberId);
 
-        String caregiverName = "김돌봄";
-
         if (caregiver.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 돌보미입니다.");
         }
@@ -129,7 +127,7 @@ public class CaregiverService {
         applyRepository.save(apply);
 
         // 사용자에게 알림 전송
-        String notificationMessage = String.format("돌보미 %s님이 신청을 수락했습니다.", caregiverName);
+        String notificationMessage = "돌보미가 정해졌어요!";
 
         messagingTemplate.convertAndSend(
                 "/topic/notifications/users/" + apply.getMember().getId().toString(),  // 모든 구독자가 받을 수 있는 브로드캐스트 경로
