@@ -62,7 +62,7 @@ public class ProdSecurityConfig {
                                 "/v3/api-docs/**",
                                 "/actuator/health"
                         ).permitAll()
-                        .requestMatchers("/api/v1/auth/**","/api/v1/apply/payments/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**","/api/v1/apply/payments/**","/ws/**").permitAll()
                         .anyRequest().authenticated()
                 );
         jwtSecurityConfig.configure(http);

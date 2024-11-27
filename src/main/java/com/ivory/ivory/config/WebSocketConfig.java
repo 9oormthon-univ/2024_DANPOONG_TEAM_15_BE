@@ -24,7 +24,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // WebSocket 연결 엔드포인트
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns(
-                        "*"
+                        "https://ivorygroup.click",
+                        "https://danpoong-ivory.vercel.app",
+                        "http://localhost:3000"
                 );
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns(
