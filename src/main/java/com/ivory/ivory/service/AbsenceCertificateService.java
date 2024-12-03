@@ -2,14 +2,10 @@ package com.ivory.ivory.service;
 
 import com.ivory.ivory.domain.AbsenceCertificate;
 import com.ivory.ivory.domain.Child;
-import com.ivory.ivory.domain.MedicalCertificate;
 import com.ivory.ivory.dto.AbsenceCertificatePageDto;
 import com.ivory.ivory.dto.AbsenceCertificateRequestDto;
 import com.ivory.ivory.dto.AbsenceCertificateResponseDto;
 import com.ivory.ivory.dto.AbsenceCertificatesDto;
-import com.ivory.ivory.dto.MedicalCertificatePageDto;
-import com.ivory.ivory.dto.MedicalCertificateResponseDto;
-import com.ivory.ivory.dto.MedicalCertificatesDto;
 import com.ivory.ivory.dto.PageInfo;
 import com.ivory.ivory.ocr.OcrParser;
 import com.ivory.ivory.ocr.OcrService;
@@ -17,13 +13,11 @@ import com.ivory.ivory.repository.AbsenceCertificateRepository;
 import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.util.DateUtil;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +34,6 @@ public class AbsenceCertificateService {
     private final AbsenceCertificateRepository absenceCertificateRepository;
     private final ChildRepository childRepository;
     private final OcrService ocrService;
-    @Qualifier("certificateOcrParser")
     private final OcrParser certificateOcrParser;
 
     @Value("${ocr.api.url}")

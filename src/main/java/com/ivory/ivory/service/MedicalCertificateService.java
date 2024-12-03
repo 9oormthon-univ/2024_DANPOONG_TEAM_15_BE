@@ -1,20 +1,15 @@
 package com.ivory.ivory.service;
 
-import com.ivory.ivory.domain.AbsenceCertificate;
 import com.ivory.ivory.domain.Child;
 import com.ivory.ivory.domain.Disease;
 import com.ivory.ivory.domain.MedicalCertificate;
-import com.ivory.ivory.dto.AbsenceCertificateRequestDto;
-import com.ivory.ivory.dto.AbsenceCertificateResponseDto;
 import com.ivory.ivory.dto.MedicalCertificatePageDto;
 import com.ivory.ivory.dto.MedicalCertificateRequestDto;
 import com.ivory.ivory.dto.MedicalCertificateResponseDto;
 import com.ivory.ivory.dto.MedicalCertificatesDto;
 import com.ivory.ivory.dto.PageInfo;
-import com.ivory.ivory.ocr.MedicalCertificateOcrService;
 import com.ivory.ivory.ocr.OcrParser;
 import com.ivory.ivory.ocr.OcrService;
-import com.ivory.ivory.repository.AbsenceCertificateRepository;
 import com.ivory.ivory.repository.ChildRepository;
 import com.ivory.ivory.repository.MedicalCertificateRepository;
 import com.ivory.ivory.util.DateUtil;
@@ -25,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,13 +35,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class MedicalCertificateService {
     private final MedicalCertificateRepository medicalCertificateRepository;
     private final ChildRepository childRepository;
-    private final MedicalCertificateOcrService ocrService;
-
-    @Qualifier("medicalCertificateOcrParser")
+    private final OcrService ocrService;
     private final OcrParser medicalCertificateOcrParser;
-    @Value("${ocr.medical-certificate.api.url}")
+
+    @Value("${ocr.api.url}")
     private String apiUrl;
-    @Value("${ocr.medical-certificate.api.secret-key}")
+    @Value("${ocr.api.secret-key}")
     private String secretKey;
 
     @Transactional
