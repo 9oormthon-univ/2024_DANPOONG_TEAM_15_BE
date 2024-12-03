@@ -39,3 +39,7 @@ kakaopay:
 
 jwt:
   secret: ${JWT_SECRET}
+
+swagger:
+  server:
+    url: http://localhost:8080
