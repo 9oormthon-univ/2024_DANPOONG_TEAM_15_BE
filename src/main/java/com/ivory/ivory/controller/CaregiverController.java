@@ -43,5 +43,10 @@ public class CaregiverController {
         return ResponseEntity.ok(response);
     }
 
-
+    @PutMapping()
+    public ResponseEntity<?> init() {
+        Long currentMemberId = securityUtil.getCurrentMemberId();
+        CustomApiResponse<?> response = caregiverService.init(currentMemberId);
+        return ResponseEntity.ok(response);
+    }
 }
