@@ -170,4 +170,21 @@ public class CaregiverService {
         CareDto careDto = CareDto.of(applyId,careDate,careTime,childName,age,image);
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "매칭된 돌봄 활동이 조회 되었습니다.",careDto);
     }
+
+
+    public CustomApiResponse<?> init(Long currentMemberId) {
+//        Optional<Caregiver> caregiver = caregiverRepository.findById(currentMemberId);
+//        if (caregiver.isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"돌보미만 초기화가 가능합니다.");
+//        }
+        //Status가 MATCHED인 것들을 모두 YET으로 바꿔주기
+        List<Apply> applies = applyRepository.findAllByStatus(Status.MATCHED);
+        applies.forEach((apply) -> {
+            apply.setStatus(Status.YET); //상태 변경
+        });
+
+        //상태 변경 내용 DB 저장
+        applyRepository.saveAll(applies);
+        return CustomApiResponse.createSuccess(HttpStatus.OK.value(),"상태가 초기화 되었습니다",null);
+    }
 }
