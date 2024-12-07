@@ -15,5 +15,6 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     Apply findFirstByChild_IdOrderByCreateAt(Long childID);
     Optional<Apply> findFirstByStatusOrderByCreateAtDesc(Status status);
     List<Apply> findAllByStatus(Status status);
+    List<Apply> findAllByOrderByCreateAtDesc();
 
 }

@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TokenDto {
 
+    private Long id;
     private String authority;
     private String grantType;
     private String accessToken;
@@ -18,7 +19,8 @@ public class TokenDto {
     private String refreshToken;
 
     @Builder
-    public TokenDto(String authority, String grantType, String accessToken, Long accessTokenExpiresIn, String refreshToken) {
+    public TokenDto(Long id, String authority, String grantType, String accessToken, Long accessTokenExpiresIn, String refreshToken) {
+        this.id = id;
         this.authority = authority;
         this.grantType = grantType;
         this.accessToken = accessToken;
