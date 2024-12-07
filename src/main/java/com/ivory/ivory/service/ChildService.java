@@ -87,7 +87,7 @@ public class ChildService {
 
             String recentApplyStatus = "아직 신청 내역이 없습니다";
             //신청 상태
-            Apply apply = applyRepository.findFirstByChild_IdOrderByCreateAt(child.getId());
+            Apply apply = applyRepository.findFirstByChild_IdOrderByCreateAtDesc(child.getId());
             if (apply != null) {
                  recentApplyStatus = getStatus(apply.getStatus());
             }
