@@ -1,5 +1,6 @@
 package com.ivory.ivory.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivory.ivory.domain.*;
 import com.ivory.ivory.dto.CareDetailDto;
 import com.ivory.ivory.dto.CareDto;
@@ -128,11 +129,27 @@ public class CaregiverService {
 
         // 사용자에게 알림 전송
         String notificationMessage = "돌보미가 정해졌어요!";
+        String childName = apply.getChild().getName();
+        String startDate = apply.getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        messagingTemplate.convertAndSend(
-                "/topic/notifications/users/" + apply.getMember().getId().toString(),  // 모든 구독자가 받을 수 있는 브로드캐스트 경로
-                notificationMessage
-        );
+        NotificationMessage message = NotificationMessage.builder()
+                .message(notificationMessage)
+                .childName(childName)
+                .startDate(startDate)
+                .build();
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String notificationJson = objectMapper.writeValueAsString(message);
+
+            messagingTemplate.convertAndSend(
+                    "/topic/notifications/users/" + apply.getMember().getId().toString(),
+                    notificationJson
+            );
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "알림 전송 중 문제가 발생했습니다.", e);
+        }
+
 
         return CustomApiResponse.createSuccess(HttpStatus.OK.value(), "돌봄이 매칭되었습니다.", null);
     }
