@@ -35,12 +35,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
 
-    // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
 
         return new User(
-                String.valueOf(member.getId()),
+                String.valueOf(member.getId()), // ID를 username 필드에 저장
                 member.getPassword(),
                 Collections.singleton(grantedAuthority)
         );
@@ -50,10 +49,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(caregiver.getAuthority().toString());
 
         return new User(
-                String.valueOf(caregiver.getId()),
+                String.valueOf(caregiver.getId()), // ID를 username 필드에 저장
                 caregiver.getPassword(),
                 Collections.singleton(grantedAuthority)
         );
     }
+
 
 }

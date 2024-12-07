@@ -37,7 +37,7 @@ public class CaregiverService {
         if(caregiver.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"돌보미만 조회가 가능합니다.");
         }
-        List<Apply> applyList = applyRepository.findAll();
+        List<Apply> applyList = applyRepository.findAllByOrderByCreateAtDesc();
         List<CareListDto> careListDto = new ArrayList<>();
         applyList.forEach(apply -> {
             Long applyId = apply.getId();
