@@ -121,7 +121,7 @@ public class ApplyService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "본인 자녀의 신청 내역만 조회할 수 있습니다.");
         }
 
-        List<Apply> applyList = applyRepository.findAllByChild_Id(child.get().getId());
+        List<Apply> applyList = applyRepository.findAllByChild_IdOrderByCreateAtDesc(child.get().getId());
 
         //응답 dto 생성
         List<ApplyListDto> applyListDto = new ArrayList<>();
