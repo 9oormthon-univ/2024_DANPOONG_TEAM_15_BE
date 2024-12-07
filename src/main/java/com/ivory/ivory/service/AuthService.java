@@ -71,7 +71,11 @@ public class AuthService {
         // 4. JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
-        // 5. RefreshToken 저장
+        // 5. Authentication 객체에서 기본키 추출
+        Long id = Long.valueOf(authentication.getName());
+
+
+        // 6. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(username)
                 .value(tokenDto.getRefreshToken())
@@ -79,7 +83,10 @@ public class AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
-        // 6. 토큰 발급
+        // 7. 유저 기본키를 TokenDto에 추가
+        tokenDto.setId(id);
+
+        // 8. 토큰 발급
         return tokenDto;
     }
 
