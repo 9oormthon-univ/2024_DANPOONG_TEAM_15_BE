@@ -106,6 +106,7 @@ public class ChildService {
     public String getStatus(Status Status) {
         switch (Status) {
             case YET: return "서비스 신청 완료";
+            case MATCHED: return "돌보미 매칭";
             case IN_PROGRESS: return "돌봄 서비스 이용 중";
             case COMPLETE: return "이용 완료";
             default: return "";
