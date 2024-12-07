@@ -1,4 +1,4 @@
-# 🍼 AI OCR 기반 질병 감염 아동 돌봄 서비스 신청 플랫폼 : 아이보리 (Ivory)
+## 🍼 AI OCR 기반 질병 감염 아동 돌봄 서비스 신청 플랫폼 : 아이보리 (Ivory)
 
 > 아이보리는 인공지능을 통해 질병감염 아동돌봄 서비스 신청을 간편화하는 플랫폼입니다.
 >
@@ -26,6 +26,7 @@
 
 <img width="100%" src="https://github.com/user-attachments/assets/6dab008b-a3f9-4c2c-8e0e-1d91787002cc">
 <img width="100%" src="https://github.com/user-attachments/assets/61b9a438-5dde-4d7f-9ca2-77af8024aefd">
+<img width="100%" src="https://github.com/user-attachments/assets/12083977-a358-4def-99bf-1b20d218820b">
 
 ## 🧑‍💻 시스템 아키텍쳐
 
